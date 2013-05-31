@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>首页</title>
+    <title>gscan</title>
+  
+    <meta name="description" content="用Go语言实现的一个端口扫描器">
   
     <meta name="author" content="khalily wang">
 
@@ -77,21 +79,13 @@
     <div class="container">
 
       <div class="content">
-        
-<div class="page-header">
-  <h1>首页 </h1>
+        <div class="page-header">
+  <h1>gscan </h1>
 </div>
 
 <div class="row">
-  <div class="span12">
-    
-<h2>最近更新</h2>
-
-
-<div class="post">
-  <h3 class="title"><a href="/go/gscan/">gscan</a> <span class="date">2013-05-31</span></h3>
-
-  <h1>用Go语言实现的一个端口扫描器&ndash;gscan</h1>
+  <div class="span8">
+    <h1>用Go语言实现的一个端口扫描器&ndash;gscan</h1>
 
 <h2>程序功能参数</h2>
 
@@ -111,13 +105,74 @@
         fin 
 </code></pre>
 
+<h2>实现思想</h2>
 
-  <div class="more">
-    <a href="/go/gscan/" class="btn">read more..</a>
+<p>一个端口一个<code>goroutine</code>，用一个<code>chanel</code>接收所有<code>goroutine</code>返回的扫描结果</p>
+
+<h2>代码在<a href="https://github.com/khalily/gscan">这里</a></h2>
+
+<pre><code>git clone git@github.com:khalily/gscan.git
+</code></pre>
+
+<p>欢迎交流！^_^</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+          
+            <li class="prev disabled"><a>&larr; Previous</a></li>
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+          
+            <li class="next disabled"><a>Next &rarr;</a>
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
   </div>
-</div>
-
-
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2013-05-31</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#go-ref">go <span>1</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#go-ref">go <span>1</span></a>
+</li>
+    
+    </ul>
   </div>
 </div>
 
