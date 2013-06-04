@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>知乎笔试</title>
+  
+    <meta name="description" content="知乎的两道笔试题">
+  
+    <meta name="author" content="khalily wang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">khalily&#39;s Blog</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">我是谁？</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>知乎笔试 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <h1>知乎笔试题</h1>
+
+<p><p></p>
+
+<h2>1.过滤html标签</h2>
+
+<p>假设在一个文本编辑器中允许使用富文本，但只允许使用以下html标签和属性，</p>
+
+<pre><code>&lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt;
+&lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q
+cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt;  &lt;pre&gt;
+</code></pre>
+
+<p>编写一个过滤器，对任意输入的文本进行过滤，输出符合要求的富文本</p>
+
+<p>代码如下：</p>
+
+<pre><code>#!/usr/bin/python env
+#coding: utf8
+
+from BeautifulSoup import BeautifulSoup
+
+html = '&lt;html&gt;&lt;head&gt;&lt;title&gt;Page title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;\
+&lt;p id=&quot;firstpara&quot; align=&quot;center&quot;&gt;This is paragraph &lt;b&gt;one&lt;/b&gt;.\
+&lt;script type=&quot;text/javascript&quot;&gt;&quot;only test&quot;;&lt;/script&gt;\
+&lt;a href=&quot;&quot; title=&quot;&quot; onclick=&quot;&quot;&gt;test&lt;/a&gt;\
+&lt;p id=&quot;secondpara&quot; align=&quot;blah&quot;&gt;This is paragraph &lt;b&gt;two&lt;/b&gt;.&lt;/html&gt;'
+
+# &lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt;
+# &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q
+# cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt;  &lt;pre&gt;
+
+WHITE_LIST = {'a': {'href': '*', 'title': '*'}, 'abbr': {'title': '*'},
+              'acronym': {'title': '*'}, 'b': {}, 'blockquote': {'cite': '*'},
+              'cite': {}, 'code': {}, 'i': {}, 'del': {'datetime': '*'},
+              'em': {}, 'q': {'cite': '*'}, 'strike': {}, 'strong': {},
+              'pre': {}}
+
+
+def parseHtml(html):
+    soup = BeautifulSoup(html)
+    for tag in soup.findAll(True):
+        if tag.name not in WHITE_LIST:
+            tag.hidden = True
+        else:
+            attr_rules = WHITE_LIST[tag.name]
+            for attr_name, attr_value in tag.attrs:
+                if attr_name not in attr_rules:
+                    del tag[attr_name]
+
+    return soup.renderContents()
+
+
+if __name__ == '__main__':
+    print parseHtml(html)
+</code></pre>
+
+<p><p></p>
+
+<h2>2.假设给你一个月的日志，格式如下：</h2>
+
+<pre><code>[I 130403 17:26:40] 1 200 GET /question/123 (8.8.9.9) 200.39ms
+[I 130403 17:26:90] 1 200 GET /topic/456 (8.8.9.9) 300.85ms
+[I 130403 17:26:90] 1 200 POST /answer/789 (8.8.9.9) 300.85ms
+...
+</code></pre>
+
+<p>方括号中依次是：级别，日期，时间，后面依次是用户id，返回码，访问方式，访问路径，用户ip，响应时间</p>
+
+<p>日志文件名格式为：年-月-日-小时.log，如：2013-01-01-18.log，共30*24个文件。</p>
+
+<p>写个程序，算出一个用户列表同时符合以下两个要求：</p>
+
+<ol>
+<li>这些用户每天都会访问（GET）/topic/***这个路径至少两次（*代表数字）</li>
+<li>这些用户每天访问（GET）的/topic/***路径中，至少会包含两个不同的路径（后面的数字不一样）</li>
+</ol>
+
+<p>再算出一个路径列表满足:
+每天都被以上用户中至少两个用户访问</p>
+
+<p>实现思路：</p>
+
+<pre><code>实现思路是先把一个月的30*24个文件名分天存储在一个filepaths_one_month列表 [[filepaths_one_day], ...]
+然后算出每一天符合要求的用户访问的路径列表 user_dict_day {user_id: [path, ...]} 和 符合要求的被访问路径的用户列表
+ path_dict_day {path: [user_id, ...]}, 然后把每天的user_dict_day的keys 求交集，求出每天都访问的用户，再用其为key, 找到这些用户访问的路径列表交集不为空的user_id, 即为要求1的答案user_list，接下来则对path_dict_day进行相同的操作，得出每天都被至少两个用户访问的路径列表，最后再用访问这些路径的用户列表与要求1求出的用户列表求交集，得出使交集不为空的path_list.
+
+需要说明一点，日志文件的年、月、日都在test()函数设置，然后在当前文件夹寻找日志文件，日志的小时范围为00点-23点(而不是01点-24点)。为了一些可读性，包含了一些较冗余的代码，不过代码不多，相信影响不大。
+</code></pre>
+
+<p>代码如下：</p>
+
+<pre><code>#!/usr/bin/env python
+#coding: utf8
+
+import re
+
+log_keys = [
+    'user_id',
+    'return_code',
+    'access_way',
+    'access_path',
+    'ip_address',
+    'time'
+]
+
+
+class Find(object):
+    def __init__(self, days, month, year):
+        self.filepaths_one_month = self.file_paths(days, month, year)
+        # for filepaths_day in self.filepaths_one_month:
+        #     for filepath in filepaths_day:
+        #         print filepath
+        self.user_dict_month = {}       # {user_id: {path, ...}}
+        self.path_dict_month = {}       # {path: {user_id, ...}}
+
+    def find_one_month(self):
+        user_dict_pre_day, path_dict_pre_day = self.find_one_day(self.filepaths_one_month[0])
+        for filepaths_one_day in self.filepaths_one_month[1:]:
+            user_dict_day, path_dict_day = self.find_one_day(filepaths_one_day)
+            user_set = set(user_dict_day.keys()) &amp; set(user_dict_pre_day.keys())
+            for user_id in user_set:
+                path_set = set(user_dict_day[user_id]) &amp; set(user_dict_pre_day[user_id])
+                if len(path_set) &gt; 0:
+                    self.user_dict_month[user_id] = path_set
+            user_dict_pre_day = self.user_dict_month
+
+            path_set = set(path_dict_day.keys()) &amp; set(path_dict_pre_day.keys())
+            for path in path_set:
+                user_set = set(path_dict_day[path]) &amp; set(path_dict_pre_day[path])
+                self.path_dict_month[path] = user_set
+            path_dict_pre_day = self.path_dict_month
+
+        user_list = self.user_dict_month.keys()
+        path_list = []
+
+        for path in self.path_dict_month.keys():
+            if len(self.path_dict_month[path] &amp; set(user_list)) &gt; 0:
+                path_list.append(path)
+
+        return user_list, path_list
+
+    def file_paths(self, days, month, year):
+        filepaths = []
+        for day in xrange(1, days+1):
+            filepaths_day = []
+            for hour in xrange(0, 24):
+                temppath = &quot;%2d-%2d-%2d-%2d.log&quot; % (year, month, day, hour)
+                filepaths_day.append(temppath.replace(' ', '0'))
+            filepaths.append(filepaths_day)
+        return filepaths
+
+    def find_one_day(self, filepaths):
+        user_dict = {}          # {user_id: {path: times}}
+        user_dict_day = {}      # {user_id: [path, ...]}
+        path_dict = {}          # {path: {user_id: times}}
+        path_dict_day = {}      # {path: [user_id, ...]}
+
+        for filepath in filepaths:
+            for line in file(filepath).readlines():
+                if not self.is_get_and_topic(line):
+                    continue
+                log_dict = self.parser_line(line)
+
+                user_id = log_dict['user_id']
+                path = log_dict['access_path']
+                if user_id not in user_dict:
+                    user_dict[user_id] = {}
+                if path not in user_dict[user_id]:
+                    user_dict[user_id][path] = 1
+                else:
+                    user_dict[user_id][path] = user_dict[user_id][path] + 1
+
+                if path not in path_dict:
+                    path_dict[path] = {}
+                if user_id not in path_dict[path]:
+                    path_dict[path][user_id] = 1
+                else:
+                    path_dict[path][user_id] = path_dict[path][user_id] + 1
+
+        for user_id in user_dict.keys():
+            for path in user_dict[user_id].keys():
+                if user_dict[user_id][path] &gt;= 2 and len(user_dict[user_id].keys()) &gt;= 2:
+                    if user_id not in user_dict_day:
+                        user_dict_day[user_id] = []
+                    user_dict_day[user_id].append(path)
+        # print 'user_dict_day:', user_dict_day
+
+        for path in path_dict.keys():
+            for user_id in path_dict[path].keys():
+                if path_dict[path][user_id] &gt;= 2:
+                    if path not in path_dict_day:
+                        path_dict_day[path] = []
+                    path_dict_day[path].append(user_id)
+        # print 'path_dict_day:', path_dict_day
+
+        return user_dict_day, path_dict_day
+
+    def parser_line(self, str):
+        log_list = str[(str.find(']')+2):].split(' ')
+        log_dict = {}
+        for index in range(0, len(log_list)):
+            log_dict[log_keys[index]] = log_list[index]
+        # for key, value in log_dict.items():
+        #     print key, value
+        return log_dict
+
+    def is_get_and_topic(self, str):
+        if re.search('GET /topic/[0-9]+', str):
+            return True
+        return False
+
+
+def test():
+    days = 30        # 一个月的天数
+    year = 2013
+    month = 1
+    test = Find(days, month, year)
+    user_list, path_list = test.find_one_month()
+
+    print 'user_list:', user_list
+    print 'path_list:', path_list
+
+if __name__ == '__main__':
+    test()
+</code></pre>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+          
+            <li class="prev disabled"><a>&larr; Previous</a></li>
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/go/caculate/" title="caculate">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2013-06-04</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#python-ref">python <span>1</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%9F%A5%E4%B9%8E-ref">知乎 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; khalily wang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script>
+    var _gaq=[['_setAccount','UA-123-12'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+  </body>
+</html>
