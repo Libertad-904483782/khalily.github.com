@@ -4,6 +4,11 @@
 		<loc>http://sample.com/</loc>
 	</url>
 	<url>
+		<loc>http://sample.com/go/caculate/</loc>
+		<lastmod>2013-06-03</lastmod>
+		<changefreq>weekly</changefreq>
+	</url>
+	<url>
 		<loc>http://sample.com/go/gscan/</loc>
 		<lastmod>2013-05-31</lastmod>
 		<changefreq>weekly</changefreq>
