@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="go," />
+  <meta name="keywords" content="Hexo,next" />
 
 
 
@@ -39,34 +39,15 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="程序功能参数Usage of ./gscan:
-  -h=&quot;help&quot;: help doc
-  -ip=&quot;127.0.0.1&quot;: IP range of scan. Example:
-        192.168.1.1
-        192.168.1.1, 192.168.1.5
-        192.168.1.1-192.168.1.100
-  -p=&quot;1-1024&quot;: Port r">
-<meta property="og:type" content="article">
-<meta property="og:title" content="用Go语言实现的一个端口扫描器--gscan">
-<meta property="og:url" content="http://boywyang.github.io/2013/05/31/gscan/index.html">
+<meta name="description" content="一个人的江湖">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Talk ☯ Me">
+<meta property="og:url" content="http://boywyang.github.io/page/2/index.html">
 <meta property="og:site_name" content="Talk ☯ Me">
-<meta property="og:description" content="程序功能参数Usage of ./gscan:
-  -h=&quot;help&quot;: help doc
-  -ip=&quot;127.0.0.1&quot;: IP range of scan. Example:
-        192.168.1.1
-        192.168.1.1, 192.168.1.5
-        192.168.1.1-192.168.1.100
-  -p=&quot;1-1024&quot;: Port r">
-<meta property="og:updated_time" content="2015-07-30T08:22:37.000Z">
+<meta property="og:description" content="一个人的江湖">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用Go语言实现的一个端口扫描器--gscan">
-<meta name="twitter:description" content="程序功能参数Usage of ./gscan:
-  -h=&quot;help&quot;: help doc
-  -ip=&quot;127.0.0.1&quot;: IP range of scan. Example:
-        192.168.1.1
-        192.168.1.1, 192.168.1.5
-        192.168.1.1-192.168.1.100
-  -p=&quot;1-1024&quot;: Port r">
+<meta name="twitter:title" content="Talk ☯ Me">
+<meta name="twitter:description" content="一个人的江湖">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -76,7 +57,7 @@
   };
 </script>
 
-    <title> 用Go语言实现的一个端口扫描器--gscan // Talk ☯ Me </title>
+    <title> Talk ☯ Me </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -92,7 +73,9 @@
 
 
 
-<div class="container one-column page-post-detail">
+<div class="container one-column 
+   page-home 
+">
     <div class="headband"></div>
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
         <div class="header-inner"><h1 class="site-meta">
@@ -184,9 +167,9 @@
         <div class="main-inner">
             <div id="content" class="content">
                 
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
@@ -197,7 +180,131 @@
           
           
             
-              用Go语言实现的一个端口扫描器--gscan
+              <a class="post-title-link" href="/2013/06/03/caculate-of-go/" itemprop="url">
+                用 golang 实现的计算器
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2013-06-03T08:00:00+08:00" content="2013-06-03">
+            2013-06-03
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2013/06/03/caculate-of-go/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2013/06/03/caculate-of-go/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody"><h2 id="功能支持">功能支持</h2><ul>
+<li>简单四则运算</li>
+<li>优先级支持</li>
+<li>小括号支持</li>
+</ul>
+<h2 id="简单演示">简单演示</h2><pre><code>$ ./caculator
+Please input express:
+<span class="number">1</span>+<span class="number">2</span>*<span class="number">1</span>-<span class="number">12</span>+<span class="number">2</span>-(<span class="number">1</span>+<span class="number">2</span>*<span class="number">3</span>)
+[<span class="number">1</span> + <span class="number">2</span> * <span class="number">1</span> - <span class="number">12</span> + <span class="number">2</span> - ( <span class="number">1</span> + <span class="number">2</span> * <span class="number">3</span> )]      <span class="comment">//中缀表达式</span>
+[<span class="number">1</span> <span class="number">2</span> <span class="number">1</span> * + <span class="number">12</span> - <span class="number">2</span> + <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> * + -]            <span class="comment">//后缀表达式</span>
+-<span class="number">14</span>                                        <span class="comment">//结果</span>
+</code></pre><h2 id="实现流程">实现流程</h2><p><img src="imgs/caculate.png" alt="caculate.png"></p>
+<h2 id="后缀到前缀的转换">后缀到前缀的转换</h2><pre><code>func pre2stuf<span class="params">(exps []string)</span> <span class="params">(exps2 []string)</span> {
+    list1 := list.New<span class="params">()</span>
+    list2 := list.New<span class="params">()</span>
+
+    <span class="keyword">for</span> _, <span class="built_in">exp</span> := range exps {
+        <span class="keyword">if</span> isOperate<span class="params">(exp)</span> {
+            <span class="keyword">if</span> op, ok := isPop<span class="params">(list1, exp)</span>; ok {
+                <span class="keyword">for</span> _, s := range op {
+                    list2.PushBack<span class="params">(s)</span>
+                }
+            }
+            <span class="keyword">if</span> <span class="built_in">exp</span> == <span class="string">")"</span> {
+                continue
+            }
+            list1.PushBack<span class="params">(exp)</span>
+        } <span class="keyword">else</span> {
+            list2.PushBack<span class="params">(exp)</span>
+        }
+    }
+
+    <span class="keyword">for</span> cur := list1.Back<span class="params">()</span>; cur <span class="built_in">!</span>= nil; cur = cur.Prev<span class="params">()</span> {
+        list2.PushBack<span class="params">(cur.Value)</span>
+    }
+
+    <span class="keyword">for</span> cur := list2.Front<span class="params">()</span>; cur <span class="built_in">!</span>= nil; cur = cur.Next<span class="params">()</span> {
+        <span class="keyword">if</span> curValue, ok := cur.Value.<span class="params">(string)</span>; ok {
+            exps2 = append<span class="params">(exps2, curValue)</span>
+        }
+    }
+    return
+}
+</code></pre><h2 id="代码在这里">代码在<a href="https://github.com/khalily/caculator" target="_blank" rel="external">这里</a></h2></span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2013/05/31/gscan/" itemprop="url">
+                用Go语言实现的一个端口扫描器--gscan
+              </a>
             
           
         </h1>
@@ -243,7 +350,8 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="程序功能参数">程序功能参数</h2><pre><code>Usage of ./gscan:
+        
+          <span itemprop="articleBody"><h2 id="程序功能参数">程序功能参数</h2><pre><code>Usage of ./gscan:
   -h=<span class="string">"help"</span>: help doc
   -ip=<span class="string">"127.0.0.1"</span>: IP range of scan. Example:
         <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>
@@ -259,57 +367,36 @@
         fin
 </code></pre><h2 id="实现思想">实现思想</h2><p>一个端口一个<code>goroutine</code>，用一个<code>chanel</code>接收所有<code>goroutine</code>返回的扫描结果</p>
 <h2 id="代码在这里">代码在<a href="https://github.com/khalily/gscan" target="_blank" rel="external">这里</a></h2></span>
+        
       
     </div>
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/go/" rel="tag">#go</a>
-          
-        </div>
+
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2013/06/03/caculate-of-go/" rel="prev">用 golang 实现的计算器</a>
-            
-          </div>
-
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-        </div>
       
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/">&laquo;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
             </div>
 
             
 
-            
-              <div class="comments" id="comments">
-                
-                  <div class="ds-thread" data-thread-key="2013/05/31/gscan/"
-                       data-title="用Go语言实现的一个端口扫描器--gscan" data-url="http://boywyang.github.io/2013/05/31/gscan/">
-                  </div>
-                
-              </div>
             
         </div>
 
@@ -326,15 +413,6 @@
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
 
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
       
 
       <section class="site-overview">
@@ -400,17 +478,6 @@
       </section>
 
       
-        <section class="post-toc-wrap sidebar-panel-active">
-          <div class="post-toc-indicator-top post-toc-indicator"></div>
-          <div class="post-toc">
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#程序功能参数"><span class="nav-number">1.</span> <span class="nav-text">程序功能参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现思想"><span class="nav-number">2.</span> <span class="nav-text">实现思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码在这里"><span class="nav-number">3.</span> <span class="nav-text">代码在这里</span></a></li></ol></div>
-            
-          </div>
-          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
-        </section>
-      
 
     </div>
   </aside>
@@ -454,7 +521,7 @@
   
   
   
-    
+  
 
   
     
@@ -477,8 +544,8 @@
   	<script src="/js/hook-duoshuo.js"></script>
   
 
-    
   
+
   
   <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
   <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
@@ -497,165 +564,6 @@
   <script type="text/javascript" src="/js/search-toggle.js"></script>
 
 
-  
-<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
-
-
-<script type="text/javascript" id="sidebar.toc.highlight">
-  $(document).ready(function () {
-    var tocSelector = '.post-toc';
-    var $tocSelector = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocSelector
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-
-        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
-      })
-      .on('clear.bs.scrollspy', function () {
-        removeCurrentActiveClass();
-      });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-
-    function processTOC () {
-      getTOCMaxHeight();
-      toggleTOCOverflowIndicators();
-    }
-
-    function getTOCMaxHeight () {
-      var height = $('.sidebar').height() -
-                   $tocSelector.position().top -
-                   $('.post-toc-indicator-bottom').height();
-
-      $tocSelector.css('height', height);
-
-      return height;
-    }
-
-    function toggleTOCOverflowIndicators () {
-      tocOverflowIndicator(
-        '.post-toc-indicator-top',
-        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
-      );
-
-      tocOverflowIndicator(
-        '.post-toc-indicator-bottom',
-        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
-      )
-    }
-
-    $(document).on('sidebar.motion.complete', function () {
-      processTOC();
-    });
-
-    $('body').scrollspy({ target: tocSelector });
-    $(window).on('resize', function () {
-      if ( $('.sidebar').hasClass('sidebar-active') ) {
-        processTOC();
-      }
-    });
-
-    onScroll($tocSelector);
-
-    function onScroll (element) {
-      element.on('mousewheel DOMMouseScroll', function (event) {
-          var oe = event.originalEvent;
-          var delta = oe.wheelDelta || -oe.detail;
-
-          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-          event.preventDefault();
-
-          toggleTOCOverflowIndicators();
-      });
-    }
-
-    function tocOverflowIndicator (indicator, action) {
-      var $indicator = $(indicator);
-      var opacity = action === 'show' ? 0.4 : 0;
-      $indicator.velocity ?
-        $indicator.velocity('stop').velocity({
-          opacity: opacity
-        }, { duration: 100 }) :
-        $indicator.stop().animate({
-          opacity: opacity
-        }, 100);
-    }
-
-  });
-</script>
-
-<script type="text/javascript" id="sidebar.nav">
-  $(document).ready(function () {
-    var html = $('html');
-    var TAB_ANIMATE_DURATION = 200;
-    var hasVelocity = $.isFunction(html.velocity);
-
-    $('.sidebar-nav li').on('click', function () {
-      var item = $(this);
-      var activeTabClassName = 'sidebar-nav-active';
-      var activePanelClassName = 'sidebar-panel-active';
-      if (item.hasClass(activeTabClassName)) {
-        return;
-      }
-
-      var currentTarget = $('.' + activePanelClassName);
-      var target = $('.' + item.data('target'));
-
-      hasVelocity ?
-        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
-          target
-            .velocity('stop')
-            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
-            .addClass(activePanelClassName);
-        }) :
-        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
-          currentTarget.hide();
-          target
-            .stop()
-            .css({'opacity': 0, 'display': 'block'})
-            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
-              currentTarget.removeClass(activePanelClassName);
-              target.addClass(activePanelClassName);
-            });
-        });
-
-      item.siblings().removeClass(activeTabClassName);
-      item.addClass(activeTabClassName);
-    });
-
-    $('.post-toc a').on('click', function (e) {
-      e.preventDefault();
-      var targetSelector = escapeSelector(this.getAttribute('href'));
-      var offset = $(targetSelector).offset().top;
-      hasVelocity ?
-        html.velocity('stop').velocity('scroll', {
-          offset: offset  + 'px',
-          mobileHA: false
-        }) :
-        $('html, body').stop().animate({
-          scrollTop: offset
-        }, 500);
-    });
-
-    // Expand sidebar on post detail page by default, when post has a toc.
-    var $tocContent = $('.post-toc-content');
-    if (isDesktop() && CONFIG.sidebar === 'post') {
-      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
-        displaySidebar();
-      }
-    }
-  });
-</script>
-
-
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -667,6 +575,31 @@
 
 
 
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"boywyang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+  
 
 
 

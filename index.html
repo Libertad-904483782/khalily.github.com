@@ -24,28 +24,30 @@
 <link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
 
 
+    <meta name="description" content="一个人的江湖" />
+
 
 
   <meta name="keywords" content="Hexo,next" />
 
 
 
-  <link rel="alternate" href="/atom.xml" title="TalkMe" type="application/atom+xml" />
+  <link rel="alternate" href="/atom.xml" title="Talk ☯ Me" type="application/atom+xml" />
 
 
 
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description">
+<meta name="description" content="一个人的江湖">
 <meta property="og:type" content="website">
-<meta property="og:title" content="TalkMe">
+<meta property="og:title" content="Talk ☯ Me">
 <meta property="og:url" content="http://boywyang.github.io/index.html">
-<meta property="og:site_name" content="TalkMe">
-<meta property="og:description">
+<meta property="og:site_name" content="Talk ☯ Me">
+<meta property="og:description" content="一个人的江湖">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TalkMe">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Talk ☯ Me">
+<meta name="twitter:description" content="一个人的江湖">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -55,7 +57,7 @@
   };
 </script>
 
-    <title> TalkMe </title>
+    <title> Talk ☯ Me </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -82,7 +84,7 @@
       <span class="logo">
         <i class="icon-logo"></i>
       </span>
-      <span class="site-title">TalkMe</span>
+      <span class="site-title">Talk ☯ Me</span>
   </a>
   <span class="logo-line-after"><i></i></span>
 </h1>
@@ -114,6 +116,14 @@
           <a href="/archives" rel="section">
             <i class="menu-item-icon icon-archives"></i> <br />
             归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
           </a>
         </li>
       
@@ -290,12 +300,53 @@
 
       
         
-          <span itemprop="description">go 语言实现的二叉表达式树</span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2013/06/06/binary-expression-tree/">
-              阅读全文 &raquo;
-            </a>
-          </div>
+          <span itemprop="articleBody"><h2 id="运行效果">运行效果</h2><pre><code>$ ./expression-tree
+
+Input Expression:     [<span class="number">1</span> + <span class="number">23</span> * <span class="number">1</span> - <span class="number">12</span> * ( <span class="number">4</span> + <span class="number">2</span> * <span class="number">5</span> )]
+Caculate Result:     -<span class="number">144</span>
+Prefix Expression:     - + <span class="number">1</span> * <span class="number">23</span> <span class="number">1</span> * <span class="number">12</span> + <span class="number">4</span> * <span class="number">2</span> <span class="number">5</span>
+Nifix Expression:     <span class="number">1</span> + <span class="number">23</span> * <span class="number">1</span> - <span class="number">12</span> * <span class="number">4</span> + <span class="number">2</span> * <span class="number">5</span>      <span class="comment">//带括号的情况下 这里有bug</span>
+Suffix Expression:     <span class="number">1</span> <span class="number">23</span> <span class="number">1</span> * + <span class="number">12</span> <span class="number">4</span> <span class="number">2</span> <span class="number">5</span> * + * -
+</code></pre><h2 id="一个简单的结构图">一个简单的结构图</h2><p><img src="imgs/expression-tree.png" alt="expression-tree"></p>
+<h2 id="关于面向对象">关于面向对象</h2><ol>
+<li><p>用<code>interface</code>定义方法</p>
+<p> type BinaryTree interface {</p>
+<pre><code><span class="function"><span class="title">setLeft</span><span class="params">(node Node)</span></span>
+<span class="function"><span class="title">setRight</span><span class="params">(node Node)</span></span>
+<span class="function"><span class="title">PrefixExpression</span><span class="params">()</span></span> string
+<span class="function"><span class="title">SuffixExpression</span><span class="params">()</span></span> string
+<span class="function"><span class="title">NifixExpression</span><span class="params">()</span></span> string
+</code></pre><p> }</p>
+</li>
+<li><p>用<code>struct</code>管理数据</p>
+<p> type OperateNode struct {</p>
+<pre><code>operate <span class="built_in">string</span>
+<span class="built_in">left</span>    Node
+<span class="built_in">right</span>   Node
+</code></pre><p> }</p>
+</li>
+<li><p>需要改变对象定义指针类型的方法</p>
+<p> func (on *OperateNode) setLeft(node Node) {</p>
+<pre><code><span class="function_start"><span class="keyword">on</span>.<span class="title">left</span></span> = node
+</code></pre><p> }</p>
+</li>
+<li><p>不需要改变对象则定义对象类型的方法</p>
+<p> func (on OperateNode) getName() string {</p>
+<pre><code><span class="command">return</span> <span class="function_start"><span class="keyword">on</span>.<span class="title">operate</span></span> + <span class="string">" "</span>
+</code></pre><p> }</p>
+</li>
+<li><p>赋值给接口用指针类型总是正确的</p>
+<p> func CreateOperateNode(v string) (node BinaryTree) {</p>
+<pre><code><span class="keyword">switch</span> v {
+<span class="keyword">case</span> <span class="string">"+"</span>:
+    <span class="keyword">return</span> &amp;Add{OperateNode{<span class="string">"+"</span>, <span class="constant">nil</span>, <span class="constant">nil</span>}}
+<span class="keyword">case</span> <span class="string">"-"</span>:
+    <span class="keyword">return</span> &amp;Subtraction{OperateNode{<span class="string">"-"</span>, <span class="constant">nil</span>, <span class="constant">nil</span>}}
+
+...
+</code></pre></li>
+</ol>
+<h2 id="代码在这里">代码在<a href="https://github.com/khalily/ExpressionTree" target="_blank" rel="external">这里</a></h2></span>
         
       
     </div>
@@ -374,180 +425,205 @@
 
       
         
-          <span itemprop="description">知乎的两道笔试题</span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2013/06/04/zhihu-test/">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
+          <span itemprop="articleBody"><h1 id="知乎笔试题">知乎笔试题</h1><h2 id="过滤html标签">过滤html标签</h2><p>假设在一个文本编辑器中允许使用富文本，但只允许使用以下html标签和属性，</p>
+<pre><code><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">""</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">abbr</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">acronym</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">b</span>&gt;</span>
+<span class="tag">&lt;<span class="title">blockquote</span> <span class="attribute">cite</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">cite</span>&gt;</span> <span class="tag">&lt;<span class="title">code</span>&gt;</span> <span class="tag">&lt;<span class="title">del</span> <span class="attribute">datetime</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">em</span>&gt;</span> <span class="tag">&lt;<span class="title">i</span>&gt;</span> <span class="tag">&lt;<span class="title">q</span>
+<span class="attribute">cite</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">strike</span>&gt;</span> <span class="tag">&lt;<span class="title">strong</span>&gt;</span>  <span class="tag">&lt;<span class="title">pre</span>&gt;</span>
+</code></pre><p>编写一个过滤器，对任意输入的文本进行过滤，输出符合要求的富文本</p>
+<p>代码如下：</p>
+<pre><code><span class="comment">#!/usr/bin/python env</span>
+<span class="comment">#coding: utf8</span>
 
-    <footer class="post-footer">
-      
+<span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup
 
-      
+html = <span class="string">'&lt;html&gt;&lt;head&gt;&lt;title&gt;Page title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;\
+&lt;p id="firstpara" align="center"&gt;This is paragraph &lt;b&gt;one&lt;/b&gt;.\
+&lt;script type="text/javascript"&gt;"only test";&lt;/script&gt;\
+&lt;a href="" title="" onclick=""&gt;test&lt;/a&gt;\
+&lt;p id="secondpara" align="blah"&gt;This is paragraph &lt;b&gt;two&lt;/b&gt;.&lt;/html&gt;'</span>
 
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
+<span class="comment"># &lt;a href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; &lt;b&gt;</span>
+<span class="comment"># &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=""&gt; &lt;em&gt; &lt;i&gt; &lt;q</span>
+<span class="comment"># cite=""&gt; &lt;strike&gt; &lt;strong&gt;  &lt;pre&gt;</span>
 
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2013/06/03/caculate-of-go/" itemprop="url">
-                用 golang 实现的计算器
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2013-06-03T08:00:00+08:00" content="2013-06-03">
-            2013-06-03
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a></span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2013/06/03/caculate-of-go/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2013/06/03/caculate-of-go/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="description">用go实现的一个计算器</span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2013/06/03/caculate-of-go/">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
+WHITE_LIST = {<span class="string">'a'</span>: {<span class="string">'href'</span>: <span class="string">'*'</span>, <span class="string">'title'</span>: <span class="string">'*'</span>}, <span class="string">'abbr'</span>: {<span class="string">'title'</span>: <span class="string">'*'</span>},
+              <span class="string">'acronym'</span>: {<span class="string">'title'</span>: <span class="string">'*'</span>}, <span class="string">'b'</span>: {}, <span class="string">'blockquote'</span>: {<span class="string">'cite'</span>: <span class="string">'*'</span>},
+              <span class="string">'cite'</span>: {}, <span class="string">'code'</span>: {}, <span class="string">'i'</span>: {}, <span class="string">'del'</span>: {<span class="string">'datetime'</span>: <span class="string">'*'</span>},
+              <span class="string">'em'</span>: {}, <span class="string">'q'</span>: {<span class="string">'cite'</span>: <span class="string">'*'</span>}, <span class="string">'strike'</span>: {}, <span class="string">'strong'</span>: {},
+              <span class="string">'pre'</span>: {}}
 
 
-    
-      
+<span class="function"><span class="keyword">def</span> <span class="title">parseHtml</span><span class="params">(html)</span>:</span>
+    soup = BeautifulSoup(html)
+    <span class="keyword">for</span> tag <span class="keyword">in</span> soup.findAll(<span class="keyword">True</span>):
+        <span class="keyword">if</span> tag.name <span class="keyword">not</span> <span class="keyword">in</span> WHITE_LIST:
+            tag.hidden = <span class="keyword">True</span>
+        <span class="keyword">else</span>:
+            attr_rules = WHITE_LIST[tag.name]
+            <span class="keyword">for</span> attr_name, attr_value <span class="keyword">in</span> tag.attrs:
+                <span class="keyword">if</span> attr_name <span class="keyword">not</span> <span class="keyword">in</span> attr_rules:
+                    <span class="keyword">del</span> tag[attr_name]
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    <span class="keyword">return</span> soup.renderContents()
 
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2013/05/31/gscan/" itemprop="url">
-                用Go语言实现的一个端口扫描器--gscan
-              </a>
-            
-          
-        </h1>
-      
 
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2013-05-31T08:00:00+08:00" content="2013-05-31">
-            2013-05-31
-          </time>
-        </span>
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    <span class="keyword">print</span> parseHtml(html)
+</code></pre><h2 id="假设给你一个月的日志，格式如下：">假设给你一个月的日志，格式如下：</h2><pre><code>[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">40</span>] <span class="number">1</span> <span class="number">200</span> GET /question/<span class="number">123</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">200.39</span>ms
+[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">90</span>] <span class="number">1</span> <span class="number">200</span> GET /topic/<span class="number">456</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">300.85</span>ms
+[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">90</span>] <span class="number">1</span> <span class="number">200</span> POST /answer/<span class="number">789</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">300.85</span>ms
+...
+</code></pre><p>方括号中依次是：级别，日期，时间，后面依次是用户id，返回码，访问方式，访问路径，用户ip，响应时间</p>
+<p>日志文件名格式为：年-月-日-小时.log，如：2013-01-01-18.log，共30*24个文件。</p>
+<p>写个程序，算出一个用户列表同时符合以下两个要求：</p>
+<ol>
+<li>这些用户每天都会访问（GET）/topic/<em>**这个路径至少两次（</em>代表数字）</li>
+<li>这些用户每天访问（GET）的/topic/<em>*</em>路径中，至少会包含两个不同的路径（后面的数字不一样）</li>
+</ol>
+<p>再算出一个路径列表满足:<br>每天都被以上用户中至少两个用户访问</p>
+<h2 id="实现思路：">实现思路：</h2><ul>
+<li>先把一个月的30*24个文件名分天存储在一个filepaths_one_month列表 [[filepaths_one_day], …]</li>
+<li>然后算出每一天符合要求的用户访问的路径列表 user_dict_day {user_id: [path, …]} 和 符合要求的被访问路径的用户列表<br>path_dict_day {path: [user_id, …]}</li>
+<li><p>然后把每天的user_dict_day的keys 求交集，求出每天都访问的用户，再用其为key, 找到这些用户访问的路径列表交集不为空的user_id, 即为要求1的答案user_list，接下来则对path_dict_day进行相同的操作，得出每天都被至少两个用户访问的路径列表，最后再用访问这些路径的用户列表与要求1求出的用户列表求交集，得出使交集不为空的path_list.</p>
+</li>
+<li><p>需要说明一点，日志文件的年、月、日都在test()函数设置，然后在当前文件夹寻找日志文件，日志的小时范围为00点-23点(而不是01点-24点)。为了一些可读性，包含了一些较冗余的代码，不过代码不多，相信影响不大。</p>
+</li>
+</ul>
+<p>代码如下：</p>
+<pre><code>#!/usr/bin/env python
+#coding: utf8
 
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a></span>
+import re
 
-              
-              
+log_keys = [
+    'user_id',
+    'return_code',
+    'access_way',
+    'access_path',
+    'ip_address',
+    'time'
+]
 
-            
-          </span>
-        
 
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2013/05/31/gscan/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2013/05/31/gscan/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
+class Find(object):
+    def __init__(self, days, month, year):
+        self.filepaths_one_month = self.file_paths(days, month, year)
+        # for filepaths_day in self.filepaths_one_month:
+        #     for filepath in filepaths_day:
+        #         print filepath
+        self.user_dict_month = {}       # {user_id: {path, ...}}
+        self.path_dict_month = {}       # {path: {user_id, ...}}
 
-    <div class="post-body">
+    def find_one_month(self):
+        user_dict_pre_day, path_dict_pre_day = self.find_one_day(self.filepaths_one_month[<span class="operator">0])
+        <span class="keyword">for</span> filepaths_one_day <span class="keyword">in</span> <span class="keyword">self</span>.filepaths_one_month[<span class="number">1</span>:]:
+            user_dict_day, path_dict_day = <span class="keyword">self</span>.find_one_day(filepaths_one_day)
+            user_set = <span class="keyword">set</span>(user_dict_day.<span class="keyword">keys</span>()) &amp; <span class="keyword">set</span>(user_dict_pre_day.<span class="keyword">keys</span>())
+            <span class="keyword">for</span> user_id <span class="keyword">in</span> user_set:
+                path_set = <span class="keyword">set</span>(user_dict_day[user_id]) &amp; <span class="keyword">set</span>(user_dict_pre_day[user_id])
+                <span class="keyword">if</span> <span class="keyword">len</span>(path_set) &gt; <span class="number">0</span>:
+                    <span class="keyword">self</span>.user_dict_month[user_id] = path_set
+            user_dict_pre_day = <span class="keyword">self</span>.user_dict_month
 
-      
-      
+            path_set = <span class="keyword">set</span>(path_dict_day.<span class="keyword">keys</span>()) &amp; <span class="keyword">set</span>(path_dict_pre_day.<span class="keyword">keys</span>())
+            <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> path_set:
+                user_set = <span class="keyword">set</span>(path_dict_day[<span class="keyword">path</span>]) &amp; <span class="keyword">set</span>(path_dict_pre_day[<span class="keyword">path</span>])
+                <span class="keyword">self</span>.path_dict_month[<span class="keyword">path</span>] = user_set
+            path_dict_pre_day = <span class="keyword">self</span>.path_dict_month
 
-      
-        
-          <span itemprop="description">用Go语言实现的一个端口扫描器</span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2013/05/31/gscan/">
-              阅读全文 &raquo;
-            </a>
-          </div>
+        user_list = <span class="keyword">self</span>.user_dict_month.<span class="keyword">keys</span>()
+        path_list = []
+
+        <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> <span class="keyword">self</span>.path_dict_month.<span class="keyword">keys</span>():
+            <span class="keyword">if</span> <span class="keyword">len</span>(<span class="keyword">self</span>.path_dict_month[<span class="keyword">path</span>] &amp; <span class="keyword">set</span>(user_list)) &gt; <span class="number">0</span>:
+                path_list.append(<span class="keyword">path</span>)
+
+        <span class="keyword">return</span> user_list, path_list
+
+    <span class="keyword">def</span> file_paths(<span class="keyword">self</span>, <span class="keyword">days</span>, <span class="keyword">month</span>, <span class="keyword">year</span>):
+        filepaths = []
+        <span class="keyword">for</span> <span class="keyword">day</span> <span class="keyword">in</span> xrange(<span class="number">1</span>, <span class="keyword">days</span>+<span class="number">1</span>):
+            filepaths_day = []
+            <span class="keyword">for</span> <span class="keyword">hour</span> <span class="keyword">in</span> xrange(<span class="number">0</span>, <span class="number">24</span>):
+                temppath = <span class="string">"%2d-%2d-%2d-%2d.log"</span> % (<span class="keyword">year</span>, <span class="keyword">month</span>, <span class="keyword">day</span>, <span class="keyword">hour</span>)
+                filepaths_day.append(temppath.<span class="keyword">replace</span>(<span class="string">' '</span>, <span class="string">'0'</span>))
+            filepaths.append(filepaths_day)
+        <span class="keyword">return</span> filepaths
+
+    <span class="keyword">def</span> find_one_day(<span class="keyword">self</span>, filepaths):
+        user_dict = {}          # {user_id: {<span class="keyword">path</span>: times}}
+        user_dict_day = {}      # {user_id: [<span class="keyword">path</span>, ...]}
+        path_dict = {}          # {<span class="keyword">path</span>: {user_id: times}}
+        path_dict_day = {}      # {<span class="keyword">path</span>: [user_id, ...]}
+
+        <span class="keyword">for</span> filepath <span class="keyword">in</span> filepaths:
+            <span class="keyword">for</span> line <span class="keyword">in</span> <span class="keyword">file</span>(filepath).readlines():
+                <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">self</span>.is_get_and_topic(line):
+                    continue
+                log_dict = <span class="keyword">self</span>.parser_line(line)
+
+                user_id = log_dict[<span class="string">'user_id'</span>]
+                <span class="keyword">path</span> = log_dict[<span class="string">'access_path'</span>]
+                <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> user_dict:
+                    user_dict[user_id] = {}
+                <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> user_dict[user_id]:
+                    user_dict[user_id][<span class="keyword">path</span>] = <span class="number">1</span>
+                <span class="keyword">else</span>:
+                    user_dict[user_id][<span class="keyword">path</span>] = user_dict[user_id][<span class="keyword">path</span>] + <span class="number">1</span>
+
+                <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> path_dict:
+                    path_dict[<span class="keyword">path</span>] = {}
+                <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> path_dict[<span class="keyword">path</span>]:
+                    path_dict[<span class="keyword">path</span>][user_id] = <span class="number">1</span>
+                <span class="keyword">else</span>:
+                    path_dict[<span class="keyword">path</span>][user_id] = path_dict[<span class="keyword">path</span>][user_id] + <span class="number">1</span>
+
+        <span class="keyword">for</span> user_id <span class="keyword">in</span> user_dict.<span class="keyword">keys</span>():
+            <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> user_dict[user_id].<span class="keyword">keys</span>():
+                <span class="keyword">if</span> user_dict[user_id][<span class="keyword">path</span>] &gt;= <span class="number">2</span> <span class="keyword">and</span> <span class="keyword">len</span>(user_dict[user_id].<span class="keyword">keys</span>()) &gt;= <span class="number">2</span>:
+                    <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> user_dict_day:
+                        user_dict_day[user_id] = []
+                    user_dict_day[user_id].append(<span class="keyword">path</span>)
+        # print <span class="string">'user_dict_day:'</span>, user_dict_day
+
+        <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> path_dict.<span class="keyword">keys</span>():
+            <span class="keyword">for</span> user_id <span class="keyword">in</span> path_dict[<span class="keyword">path</span>].<span class="keyword">keys</span>():
+                <span class="keyword">if</span> path_dict[<span class="keyword">path</span>][user_id] &gt;= <span class="number">2</span>:
+                    <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> path_dict_day:
+                        path_dict_day[<span class="keyword">path</span>] = []
+                    path_dict_day[<span class="keyword">path</span>].append(user_id)
+        # print <span class="string">'path_dict_day:'</span>, path_dict_day
+
+        <span class="keyword">return</span> user_dict_day, path_dict_day
+
+    <span class="keyword">def</span> parser_line(<span class="keyword">self</span>, <span class="keyword">str</span>):
+        log_list = <span class="keyword">str</span>[(<span class="keyword">str</span>.find(<span class="string">']'</span>)+<span class="number">2</span>):].<span class="keyword">split</span>(<span class="string">' '</span>)
+        log_dict = {}
+        <span class="keyword">for</span> <span class="keyword">index</span> <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">0</span>, <span class="keyword">len</span>(log_list)):
+            log_dict[log_keys[<span class="keyword">index</span>]] = log_list[<span class="keyword">index</span>]
+        # <span class="keyword">for</span> <span class="keyword">key</span>, <span class="keyword">value</span> <span class="keyword">in</span> log_dict.items():
+        #     print <span class="keyword">key</span>, <span class="keyword">value</span>
+        <span class="keyword">return</span> log_dict
+
+    <span class="keyword">def</span> is_get_and_topic(<span class="keyword">self</span>, <span class="keyword">str</span>):
+        <span class="keyword">if</span> re.<span class="keyword">search</span>(<span class="string">'GET /topic/[0-9]+'</span>, <span class="keyword">str</span>):
+            <span class="keyword">return</span> <span class="literal">True</span>
+        <span class="keyword">return</span> <span class="literal">False</span>
+
+
+<span class="keyword">def</span> <span class="keyword">test</span>():
+    <span class="keyword">days</span> = <span class="number">30</span>        # 一个月的天数
+    <span class="keyword">year</span> = <span class="number">2013</span>
+    <span class="keyword">month</span> = <span class="number">1</span>
+    <span class="keyword">test</span> = Find(<span class="keyword">days</span>, <span class="keyword">month</span>, <span class="keyword">year</span>)
+    user_list, path_list = <span class="keyword">test</span>.find_one_month()
+
+    print <span class="string">'user_list:'</span>, user_list
+    print <span class="string">'path_list:'</span>, path_list
+
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    <span class="keyword">test</span>()</span>
+</code></pre></span>
         
       
     </div>
@@ -569,6 +645,10 @@
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
+  </nav>
+
 
             </div>
 
@@ -597,7 +677,7 @@
           <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/13564011?v=3&u=986a583876eb8f35454c473d43db912a1b4ec48f&s=140" alt="boywyang" itemprop="image"/>
           <p class="site-author-name" itemprop="name">boywyang</p>
         </div>
-        <p class="site-description motion-element" itemprop="description"></p>
+        <p class="site-description motion-element" itemprop="description">一个人的江湖</p>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
@@ -607,10 +687,10 @@
           </div>
 
           <div class="site-state-item site-state-categories">
-            
+            <a href="/categories">
               <span class="site-state-item-count">2</span>
               <span class="site-state-item-name">分类</span>
-              
+              </a>
           </div>
 
           <div class="site-state-item site-state-tags">
