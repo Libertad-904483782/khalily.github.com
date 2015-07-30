@@ -4,12 +4,12 @@
   <title><![CDATA[Talk ☯ Me]]></title>
   
   <link href="/atom.xml" rel="self"/>
-  <link href="http://boywyang.github.io//"/>
+  <link href="http://khalily.github.io//"/>
   <updated>2015-07-30T07:51:38.000Z</updated>
-  <id>http://boywyang.github.io//</id>
+  <id>http://khalily.github.io//</id>
   
   <author>
-    <name><![CDATA[boywyang]]></name>
+    <name><![CDATA[khalily]]></name>
     
   </author>
   
@@ -17,8 +17,8 @@
   
   <entry>
     <title><![CDATA[git 使用札记]]></title>
-    <link href="http://boywyang.github.io/2015/07/30/git-use/"/>
-    <id>http://boywyang.github.io/2015/07/30/git-use/</id>
+    <link href="http://khalily.github.io/2015/07/30/git-use/"/>
+    <id>http://khalily.github.io/2015/07/30/git-use/</id>
     <published>2015-07-30T06:32:18.000Z</published>
     <updated>2015-07-30T07:51:38.000Z</updated>
     <content type="html"><![CDATA[<h3 id="1-_git_subtree">1. git subtree</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># git <span class="keyword">subtree </span>提示不支持该命令时</span><br><span class="line"><span class="label">sudo</span> chmod +x /usr/share/doc/git/contrib/<span class="keyword">subtree/git-subtree.sh</span><br><span class="line"></span><span class="label">sudo</span> ln -s /usr/share/doc/git/contrib/<span class="keyword">subtree/git-subtree.sh </span>/usr/lib/git-core/git-<span class="keyword">subtree</span></span><br></pre></td></tr></table></figure>
@@ -29,14 +29,14 @@
     <![CDATA[<h3 id="1-_git_subtree">1. git subtree</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><b]]>
     </summary>
     
-      <category term="git" scheme="http://boywyang.github.io/tags/git/"/>
+      <category term="git" scheme="http://khalily.github.io/tags/git/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[golang面向对象之--二叉表达式树]]></title>
-    <link href="http://boywyang.github.io/2013/06/06/binary-expression-tree/"/>
-    <id>http://boywyang.github.io/2013/06/06/binary-expression-tree/</id>
+    <link href="http://khalily.github.io/2013/06/06/binary-expression-tree/"/>
+    <id>http://khalily.github.io/2013/06/06/binary-expression-tree/</id>
     <published>2013-06-06T00:00:00.000Z</published>
     <updated>2015-07-30T08:55:11.000Z</updated>
     <content type="html"><![CDATA[<h2 id="运行效果">运行效果</h2><pre><code>$ ./expression-tree
@@ -92,16 +92,16 @@ Suffix Expression:     <span class="number">1</span> <span class="number">23</sp
 Input Expression:     [<span class="number">1</span> + <span class="number">23</span>]]>
     </summary>
     
-      <category term="二叉树" scheme="http://boywyang.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+      <category term="二叉树" scheme="http://khalily.github.io/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
     
-      <category term="go" scheme="http://boywyang.github.io/categories/go/"/>
+      <category term="go" scheme="http://khalily.github.io/categories/go/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[知乎笔试]]></title>
-    <link href="http://boywyang.github.io/2013/06/04/zhihu-test/"/>
-    <id>http://boywyang.github.io/2013/06/04/zhihu-test/</id>
+    <link href="http://khalily.github.io/2013/06/04/zhihu-test/"/>
+    <id>http://khalily.github.io/2013/06/04/zhihu-test/</id>
     <published>2013-06-04T00:00:00.000Z</published>
     <updated>2015-07-30T08:24:38.000Z</updated>
     <content type="html"><![CDATA[<h1 id="知乎笔试题">知乎笔试题</h1><h2 id="过滤html标签">过滤html标签</h2><p>假设在一个文本编辑器中允许使用富文本，但只允许使用以下html标签和属性，</p>
@@ -308,16 +308,16 @@ class Find(object):
 <pre><code><span class="tag">&lt;<span ]]>
     </summary>
     
-      <category term="知乎" scheme="http://boywyang.github.io/tags/%E7%9F%A5%E4%B9%8E/"/>
+      <category term="知乎" scheme="http://khalily.github.io/tags/%E7%9F%A5%E4%B9%8E/"/>
     
-      <category term="python" scheme="http://boywyang.github.io/categories/python/"/>
+      <category term="python" scheme="http://khalily.github.io/categories/python/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[用 golang 实现的计算器]]></title>
-    <link href="http://boywyang.github.io/2013/06/03/caculate-of-go/"/>
-    <id>http://boywyang.github.io/2013/06/03/caculate-of-go/</id>
+    <link href="http://khalily.github.io/2013/06/03/caculate-of-go/"/>
+    <id>http://khalily.github.io/2013/06/03/caculate-of-go/</id>
     <published>2013-06-03T00:00:00.000Z</published>
     <updated>2015-07-30T08:54:51.000Z</updated>
     <content type="html"><![CDATA[<h2 id="功能支持">功能支持</h2><ul>
@@ -374,14 +374,14 @@ Please input express:
 Please input]]>
     </summary>
     
-      <category term="go" scheme="http://boywyang.github.io/categories/go/"/>
+      <category term="go" scheme="http://khalily.github.io/categories/go/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[用Go语言实现的一个端口扫描器--gscan]]></title>
-    <link href="http://boywyang.github.io/2013/05/31/gscan/"/>
-    <id>http://boywyang.github.io/2013/05/31/gscan/</id>
+    <link href="http://khalily.github.io/2013/05/31/gscan/"/>
+    <id>http://khalily.github.io/2013/05/31/gscan/</id>
     <published>2013-05-31T00:00:00.000Z</published>
     <updated>2015-07-30T08:22:37.000Z</updated>
     <content type="html"><![CDATA[<h2 id="程序功能参数">程序功能参数</h2><pre><code>Usage of ./gscan:
@@ -406,9 +406,9 @@ Please input]]>
   -ip=<span class="string">"127.0.]]>
     </summary>
     
-      <category term="go" scheme="http://boywyang.github.io/tags/go/"/>
+      <category term="go" scheme="http://khalily.github.io/tags/go/"/>
     
-      <category term="go" scheme="http://boywyang.github.io/categories/go/"/>
+      <category term="go" scheme="http://khalily.github.io/categories/go/"/>
     
   </entry>
   
