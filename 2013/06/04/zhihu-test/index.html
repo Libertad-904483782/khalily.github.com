@@ -1,0 +1,841 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+
+
+  <meta name="keywords" content="知乎," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="TalkMe" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="知乎的两道笔试题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="知乎笔试">
+<meta property="og:url" content="http://boywyang.github.io/2013/06/04/zhihu-test/index.html">
+<meta property="og:site_name" content="TalkMe">
+<meta property="og:description" content="知乎的两道笔试题">
+<meta property="og:updated_time" content="2015-07-30T06:39:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="知乎笔试">
+<meta name="twitter:description" content="知乎的两道笔试题">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+    <title> 知乎笔试 // TalkMe </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">TalkMe</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+<form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'xjQw5JajP2rVzzYMVhn5','2.0.0');
+</script>
+
+<div class="site-search-toggle"></div>
+    </div>
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              知乎笔试
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2013-06-04T08:00:00+08:00" content="2013-06-04">
+            2013-06-04
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2013/06/04/zhihu-test/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2013/06/04/zhihu-test/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="知乎笔试题">知乎笔试题</h1><h2 id="过滤html标签">过滤html标签</h2><p>假设在一个文本编辑器中允许使用富文本，但只允许使用以下html标签和属性，</p>
+<pre><code><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">""</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">abbr</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">acronym</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">b</span>&gt;</span>
+<span class="tag">&lt;<span class="title">blockquote</span> <span class="attribute">cite</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">cite</span>&gt;</span> <span class="tag">&lt;<span class="title">code</span>&gt;</span> <span class="tag">&lt;<span class="title">del</span> <span class="attribute">datetime</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">em</span>&gt;</span> <span class="tag">&lt;<span class="title">i</span>&gt;</span> <span class="tag">&lt;<span class="title">q</span>
+<span class="attribute">cite</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">strike</span>&gt;</span> <span class="tag">&lt;<span class="title">strong</span>&gt;</span>  <span class="tag">&lt;<span class="title">pre</span>&gt;</span>
+</code></pre><p>编写一个过滤器，对任意输入的文本进行过滤，输出符合要求的富文本</p>
+<p>代码如下：</p>
+<pre><code><span class="comment">#!/usr/bin/python env</span>
+<span class="comment">#coding: utf8</span>
+
+<span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup
+
+html = <span class="string">'&lt;html&gt;&lt;head&gt;&lt;title&gt;Page title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;\
+&lt;p id="firstpara" align="center"&gt;This is paragraph &lt;b&gt;one&lt;/b&gt;.\
+&lt;script type="text/javascript"&gt;"only test";&lt;/script&gt;\
+&lt;a href="" title="" onclick=""&gt;test&lt;/a&gt;\
+&lt;p id="secondpara" align="blah"&gt;This is paragraph &lt;b&gt;two&lt;/b&gt;.&lt;/html&gt;'</span>
+
+<span class="comment"># &lt;a href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; &lt;b&gt;</span>
+<span class="comment"># &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=""&gt; &lt;em&gt; &lt;i&gt; &lt;q</span>
+<span class="comment"># cite=""&gt; &lt;strike&gt; &lt;strong&gt;  &lt;pre&gt;</span>
+
+WHITE_LIST = {<span class="string">'a'</span>: {<span class="string">'href'</span>: <span class="string">'*'</span>, <span class="string">'title'</span>: <span class="string">'*'</span>}, <span class="string">'abbr'</span>: {<span class="string">'title'</span>: <span class="string">'*'</span>},
+              <span class="string">'acronym'</span>: {<span class="string">'title'</span>: <span class="string">'*'</span>}, <span class="string">'b'</span>: {}, <span class="string">'blockquote'</span>: {<span class="string">'cite'</span>: <span class="string">'*'</span>},
+              <span class="string">'cite'</span>: {}, <span class="string">'code'</span>: {}, <span class="string">'i'</span>: {}, <span class="string">'del'</span>: {<span class="string">'datetime'</span>: <span class="string">'*'</span>},
+              <span class="string">'em'</span>: {}, <span class="string">'q'</span>: {<span class="string">'cite'</span>: <span class="string">'*'</span>}, <span class="string">'strike'</span>: {}, <span class="string">'strong'</span>: {},
+              <span class="string">'pre'</span>: {}}
+
+
+<span class="function"><span class="keyword">def</span> <span class="title">parseHtml</span><span class="params">(html)</span>:</span>
+    soup = BeautifulSoup(html)
+    <span class="keyword">for</span> tag <span class="keyword">in</span> soup.findAll(<span class="keyword">True</span>):
+        <span class="keyword">if</span> tag.name <span class="keyword">not</span> <span class="keyword">in</span> WHITE_LIST:
+            tag.hidden = <span class="keyword">True</span>
+        <span class="keyword">else</span>:
+            attr_rules = WHITE_LIST[tag.name]
+            <span class="keyword">for</span> attr_name, attr_value <span class="keyword">in</span> tag.attrs:
+                <span class="keyword">if</span> attr_name <span class="keyword">not</span> <span class="keyword">in</span> attr_rules:
+                    <span class="keyword">del</span> tag[attr_name]
+
+    <span class="keyword">return</span> soup.renderContents()
+
+
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    <span class="keyword">print</span> parseHtml(html)
+</code></pre><h2 id="假设给你一个月的日志，格式如下：">假设给你一个月的日志，格式如下：</h2><pre><code>[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">40</span>] <span class="number">1</span> <span class="number">200</span> GET /question/<span class="number">123</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">200.39</span>ms
+[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">90</span>] <span class="number">1</span> <span class="number">200</span> GET /topic/<span class="number">456</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">300.85</span>ms
+[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">90</span>] <span class="number">1</span> <span class="number">200</span> POST /answer/<span class="number">789</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">300.85</span>ms
+...
+</code></pre><p>方括号中依次是：级别，日期，时间，后面依次是用户id，返回码，访问方式，访问路径，用户ip，响应时间</p>
+<p>日志文件名格式为：年-月-日-小时.log，如：2013-01-01-18.log，共30*24个文件。</p>
+<p>写个程序，算出一个用户列表同时符合以下两个要求：</p>
+<ol>
+<li>这些用户每天都会访问（GET）/topic/<em>**这个路径至少两次（</em>代表数字）</li>
+<li>这些用户每天访问（GET）的/topic/<em>*</em>路径中，至少会包含两个不同的路径（后面的数字不一样）</li>
+</ol>
+<p>再算出一个路径列表满足:<br>每天都被以上用户中至少两个用户访问</p>
+<p>实现思路：</p>
+<pre><code>实现思路是先把一个月的<span class="number">30</span>*<span class="number">24</span>个文件名分天存储在一个filepaths_one_month列表 [[filepaths_one_day], ...]
+然后算出每一天符合要求的用户访问的路径列表 user_dict_day {user_id: [path, ...]} 和 符合要求的被访问路径的用户列表
+ path_dict_day {path: [user_id, ...]}, 然后把每天的user_dict_day的keys 求交集，求出每天都访问的用户，再用其为key, 找到这些用户访问的路径列表交集不为空的user_id, 即为要求<span class="number">1</span>的答案user_list，接下来则对path_dict_day进行相同的操作，得出每天都被至少两个用户访问的路径列表，最后再用访问这些路径的用户列表与要求<span class="number">1</span>求出的用户列表求交集，得出使交集不为空的path_list.
+
+需要说明一点，日志文件的年、月、日都在test()函数设置，然后在当前文件夹寻找日志文件，日志的小时范围为<span class="number">00</span>点-<span class="number">23</span>点(而不是<span class="number">01</span>点-<span class="number">24</span>点)。为了一些可读性，包含了一些较冗余的代码，不过代码不多，相信影响不大。
+</code></pre><p>代码如下：</p>
+<pre><code>#!/usr/bin/env python
+#coding: utf8
+
+import re
+
+log_keys = [
+    'user_id',
+    'return_code',
+    'access_way',
+    'access_path',
+    'ip_address',
+    'time'
+]
+
+
+class Find(object):
+    def __init__(self, days, month, year):
+        self.filepaths_one_month = self.file_paths(days, month, year)
+        # for filepaths_day in self.filepaths_one_month:
+        #     for filepath in filepaths_day:
+        #         print filepath
+        self.user_dict_month = {}       # {user_id: {path, ...}}
+        self.path_dict_month = {}       # {path: {user_id, ...}}
+
+    def find_one_month(self):
+        user_dict_pre_day, path_dict_pre_day = self.find_one_day(self.filepaths_one_month[<span class="operator">0])
+        <span class="keyword">for</span> filepaths_one_day <span class="keyword">in</span> <span class="keyword">self</span>.filepaths_one_month[<span class="number">1</span>:]:
+            user_dict_day, path_dict_day = <span class="keyword">self</span>.find_one_day(filepaths_one_day)
+            user_set = <span class="keyword">set</span>(user_dict_day.<span class="keyword">keys</span>()) &amp; <span class="keyword">set</span>(user_dict_pre_day.<span class="keyword">keys</span>())
+            <span class="keyword">for</span> user_id <span class="keyword">in</span> user_set:
+                path_set = <span class="keyword">set</span>(user_dict_day[user_id]) &amp; <span class="keyword">set</span>(user_dict_pre_day[user_id])
+                <span class="keyword">if</span> <span class="keyword">len</span>(path_set) &gt; <span class="number">0</span>:
+                    <span class="keyword">self</span>.user_dict_month[user_id] = path_set
+            user_dict_pre_day = <span class="keyword">self</span>.user_dict_month
+
+            path_set = <span class="keyword">set</span>(path_dict_day.<span class="keyword">keys</span>()) &amp; <span class="keyword">set</span>(path_dict_pre_day.<span class="keyword">keys</span>())
+            <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> path_set:
+                user_set = <span class="keyword">set</span>(path_dict_day[<span class="keyword">path</span>]) &amp; <span class="keyword">set</span>(path_dict_pre_day[<span class="keyword">path</span>])
+                <span class="keyword">self</span>.path_dict_month[<span class="keyword">path</span>] = user_set
+            path_dict_pre_day = <span class="keyword">self</span>.path_dict_month
+
+        user_list = <span class="keyword">self</span>.user_dict_month.<span class="keyword">keys</span>()
+        path_list = []
+
+        <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> <span class="keyword">self</span>.path_dict_month.<span class="keyword">keys</span>():
+            <span class="keyword">if</span> <span class="keyword">len</span>(<span class="keyword">self</span>.path_dict_month[<span class="keyword">path</span>] &amp; <span class="keyword">set</span>(user_list)) &gt; <span class="number">0</span>:
+                path_list.append(<span class="keyword">path</span>)
+
+        <span class="keyword">return</span> user_list, path_list
+
+    <span class="keyword">def</span> file_paths(<span class="keyword">self</span>, <span class="keyword">days</span>, <span class="keyword">month</span>, <span class="keyword">year</span>):
+        filepaths = []
+        <span class="keyword">for</span> <span class="keyword">day</span> <span class="keyword">in</span> xrange(<span class="number">1</span>, <span class="keyword">days</span>+<span class="number">1</span>):
+            filepaths_day = []
+            <span class="keyword">for</span> <span class="keyword">hour</span> <span class="keyword">in</span> xrange(<span class="number">0</span>, <span class="number">24</span>):
+                temppath = <span class="string">"%2d-%2d-%2d-%2d.log"</span> % (<span class="keyword">year</span>, <span class="keyword">month</span>, <span class="keyword">day</span>, <span class="keyword">hour</span>)
+                filepaths_day.append(temppath.<span class="keyword">replace</span>(<span class="string">' '</span>, <span class="string">'0'</span>))
+            filepaths.append(filepaths_day)
+        <span class="keyword">return</span> filepaths
+
+    <span class="keyword">def</span> find_one_day(<span class="keyword">self</span>, filepaths):
+        user_dict = {}          # {user_id: {<span class="keyword">path</span>: times}}
+        user_dict_day = {}      # {user_id: [<span class="keyword">path</span>, ...]}
+        path_dict = {}          # {<span class="keyword">path</span>: {user_id: times}}
+        path_dict_day = {}      # {<span class="keyword">path</span>: [user_id, ...]}
+
+        <span class="keyword">for</span> filepath <span class="keyword">in</span> filepaths:
+            <span class="keyword">for</span> line <span class="keyword">in</span> <span class="keyword">file</span>(filepath).readlines():
+                <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">self</span>.is_get_and_topic(line):
+                    continue
+                log_dict = <span class="keyword">self</span>.parser_line(line)
+
+                user_id = log_dict[<span class="string">'user_id'</span>]
+                <span class="keyword">path</span> = log_dict[<span class="string">'access_path'</span>]
+                <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> user_dict:
+                    user_dict[user_id] = {}
+                <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> user_dict[user_id]:
+                    user_dict[user_id][<span class="keyword">path</span>] = <span class="number">1</span>
+                <span class="keyword">else</span>:
+                    user_dict[user_id][<span class="keyword">path</span>] = user_dict[user_id][<span class="keyword">path</span>] + <span class="number">1</span>
+
+                <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> path_dict:
+                    path_dict[<span class="keyword">path</span>] = {}
+                <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> path_dict[<span class="keyword">path</span>]:
+                    path_dict[<span class="keyword">path</span>][user_id] = <span class="number">1</span>
+                <span class="keyword">else</span>:
+                    path_dict[<span class="keyword">path</span>][user_id] = path_dict[<span class="keyword">path</span>][user_id] + <span class="number">1</span>
+
+        <span class="keyword">for</span> user_id <span class="keyword">in</span> user_dict.<span class="keyword">keys</span>():
+            <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> user_dict[user_id].<span class="keyword">keys</span>():
+                <span class="keyword">if</span> user_dict[user_id][<span class="keyword">path</span>] &gt;= <span class="number">2</span> <span class="keyword">and</span> <span class="keyword">len</span>(user_dict[user_id].<span class="keyword">keys</span>()) &gt;= <span class="number">2</span>:
+                    <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> user_dict_day:
+                        user_dict_day[user_id] = []
+                    user_dict_day[user_id].append(<span class="keyword">path</span>)
+        # print <span class="string">'user_dict_day:'</span>, user_dict_day
+
+        <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> path_dict.<span class="keyword">keys</span>():
+            <span class="keyword">for</span> user_id <span class="keyword">in</span> path_dict[<span class="keyword">path</span>].<span class="keyword">keys</span>():
+                <span class="keyword">if</span> path_dict[<span class="keyword">path</span>][user_id] &gt;= <span class="number">2</span>:
+                    <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> path_dict_day:
+                        path_dict_day[<span class="keyword">path</span>] = []
+                    path_dict_day[<span class="keyword">path</span>].append(user_id)
+        # print <span class="string">'path_dict_day:'</span>, path_dict_day
+
+        <span class="keyword">return</span> user_dict_day, path_dict_day
+
+    <span class="keyword">def</span> parser_line(<span class="keyword">self</span>, <span class="keyword">str</span>):
+        log_list = <span class="keyword">str</span>[(<span class="keyword">str</span>.find(<span class="string">']'</span>)+<span class="number">2</span>):].<span class="keyword">split</span>(<span class="string">' '</span>)
+        log_dict = {}
+        <span class="keyword">for</span> <span class="keyword">index</span> <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">0</span>, <span class="keyword">len</span>(log_list)):
+            log_dict[log_keys[<span class="keyword">index</span>]] = log_list[<span class="keyword">index</span>]
+        # <span class="keyword">for</span> <span class="keyword">key</span>, <span class="keyword">value</span> <span class="keyword">in</span> log_dict.items():
+        #     print <span class="keyword">key</span>, <span class="keyword">value</span>
+        <span class="keyword">return</span> log_dict
+
+    <span class="keyword">def</span> is_get_and_topic(<span class="keyword">self</span>, <span class="keyword">str</span>):
+        <span class="keyword">if</span> re.<span class="keyword">search</span>(<span class="string">'GET /topic/[0-9]+'</span>, <span class="keyword">str</span>):
+            <span class="keyword">return</span> <span class="literal">True</span>
+        <span class="keyword">return</span> <span class="literal">False</span>
+
+
+<span class="keyword">def</span> <span class="keyword">test</span>():
+    <span class="keyword">days</span> = <span class="number">30</span>        # 一个月的天数
+    <span class="keyword">year</span> = <span class="number">2013</span>
+    <span class="keyword">month</span> = <span class="number">1</span>
+    <span class="keyword">test</span> = Find(<span class="keyword">days</span>, <span class="keyword">month</span>, <span class="keyword">year</span>)
+    user_list, path_list = <span class="keyword">test</span>.find_one_month()
+
+    print <span class="string">'user_list:'</span>, user_list
+    print <span class="string">'path_list:'</span>, path_list
+
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    <span class="keyword">test</span>()</span>
+</code></pre></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/知乎/" rel="tag">#知乎</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/06/06/binary-expression-tree/" rel="prev">golang面向对象之--二叉表达式树</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/06/03/caculate-of-go/" rel="next">用 golang 实现的计算器</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2013/06/04/zhihu-test/"
+                       data-title="知乎笔试" data-url="http://boywyang.github.io/2013/06/04/zhihu-test/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/13564011?v=3&u=986a583876eb8f35454c473d43db912a1b4ec48f&s=140" alt="boywyang" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">boywyang</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/khalily" target="_blank">Github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/3808062893" target="_blank">Weibo</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#知乎笔试题"><span class="nav-number">1.</span> <span class="nav-text">知乎笔试题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#过滤html标签"><span class="nav-number">1.1.</span> <span class="nav-text">过滤html标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#假设给你一个月的日志，格式如下："><span class="nav-number">1.2.</span> <span class="nav-text">假设给你一个月的日志，格式如下：</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">boywyang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"boywyang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>
