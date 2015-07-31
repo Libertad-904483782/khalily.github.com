@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="Hexo,next" />
+  <meta name="keywords" content="git," />
 
 
 
@@ -39,47 +39,19 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="功能支持
-简单四则运算
-优先级支持
-小括号支持
-
-简单演示$ ./caculator
-Please input express:
-1+2*1-12+2-(1+2*3)
-[1 + 2 * 1 - 12 + 2 - ( 1 + 2 * 3 )]      //中缀表达式
-[1 2 1 * + 12 - 2 + 1 2 3 * + -]            //后缀表达式
--14">
+<meta name="description" content="1. git subtree123# git subtree 提示不支持该命令时sudo chmod +x /usr/share/doc/git/contrib/subtree/git-subtree.shsudo ln -s /usr/share/doc/git/contrib/subtree/git-subtree.sh /usr/lib/git-core/git-subtree
+123456">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用 golang 实现的计算器">
-<meta property="og:url" content="http://khalily.github.io/2013/06/03/caculate-of-go/index.html">
+<meta property="og:title" content="git 使用札记">
+<meta property="og:url" content="http://khalily.github.io/2015/07/29/git-use/index.html">
 <meta property="og:site_name" content="Talk ☯ Me">
-<meta property="og:description" content="功能支持
-简单四则运算
-优先级支持
-小括号支持
-
-简单演示$ ./caculator
-Please input express:
-1+2*1-12+2-(1+2*3)
-[1 + 2 * 1 - 12 + 2 - ( 1 + 2 * 3 )]      //中缀表达式
-[1 2 1 * + 12 - 2 + 1 2 3 * + -]            //后缀表达式
--14">
-<meta property="og:image" content="http://khalily.github.io/imgs/caculate.png">
-<meta property="og:updated_time" content="2015-07-30T08:54:51.000Z">
+<meta property="og:description" content="1. git subtree123# git subtree 提示不支持该命令时sudo chmod +x /usr/share/doc/git/contrib/subtree/git-subtree.shsudo ln -s /usr/share/doc/git/contrib/subtree/git-subtree.sh /usr/lib/git-core/git-subtree
+123456">
+<meta property="og:updated_time" content="2015-07-30T11:20:23.302Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用 golang 实现的计算器">
-<meta name="twitter:description" content="功能支持
-简单四则运算
-优先级支持
-小括号支持
-
-简单演示$ ./caculator
-Please input express:
-1+2*1-12+2-(1+2*3)
-[1 + 2 * 1 - 12 + 2 - ( 1 + 2 * 3 )]      //中缀表达式
-[1 2 1 * + 12 - 2 + 1 2 3 * + -]            //后缀表达式
--14">
+<meta name="twitter:title" content="git 使用札记">
+<meta name="twitter:description" content="1. git subtree123# git subtree 提示不支持该命令时sudo chmod +x /usr/share/doc/git/contrib/subtree/git-subtree.shsudo ln -s /usr/share/doc/git/contrib/subtree/git-subtree.sh /usr/lib/git-core/git-subtree
+123456">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -89,7 +61,7 @@ Please input express:
   };
 </script>
 
-    <title> 用 golang 实现的计算器 // Talk ☯ Me </title>
+    <title> git 使用札记 // Talk ☯ Me </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -210,7 +182,7 @@ Please input express:
           
           
             
-              用 golang 实现的计算器
+              git 使用札记
             
           
         </h1>
@@ -219,30 +191,19 @@ Please input express:
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2013-06-03T08:00:00+08:00" content="2013-06-03">
-            2013-06-03
+          <time itemprop="dateCreated" datetime="2015-07-29T00:00:00+08:00" content="2015-07-29">
+            2015-07-29
           </time>
         </span>
 
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a></span>
-
-              
-              
-
-            
-          </span>
         
 
         
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2013/06/03/caculate-of-go/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2013/06/03/caculate-of-go/" itemprop="commentsCount"></span>
+              <a href="/2015/07/29/git-use/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/29/git-use/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -256,67 +217,33 @@ Please input express:
       
 
       
-        <span itemprop="articleBody"><h2 id="功能支持">功能支持</h2><ul>
-<li>简单四则运算</li>
-<li>优先级支持</li>
-<li>小括号支持</li>
-</ul>
-<h2 id="简单演示">简单演示</h2><pre><code>$ ./caculator
-Please input express:
-<span class="number">1</span>+<span class="number">2</span>*<span class="number">1</span>-<span class="number">12</span>+<span class="number">2</span>-(<span class="number">1</span>+<span class="number">2</span>*<span class="number">3</span>)
-[<span class="number">1</span> + <span class="number">2</span> * <span class="number">1</span> - <span class="number">12</span> + <span class="number">2</span> - ( <span class="number">1</span> + <span class="number">2</span> * <span class="number">3</span> )]      <span class="comment">//中缀表达式</span>
-[<span class="number">1</span> <span class="number">2</span> <span class="number">1</span> * + <span class="number">12</span> - <span class="number">2</span> + <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> * + -]            <span class="comment">//后缀表达式</span>
--<span class="number">14</span>                                        <span class="comment">//结果</span>
-</code></pre><h2 id="实现流程">实现流程</h2><p><img src="imgs/caculate.png" alt="caculate.png"></p>
-<h2 id="后缀到前缀的转换">后缀到前缀的转换</h2><pre><code>func pre2stuf<span class="params">(exps []string)</span> <span class="params">(exps2 []string)</span> {
-    list1 := list.New<span class="params">()</span>
-    list2 := list.New<span class="params">()</span>
-
-    <span class="keyword">for</span> _, <span class="built_in">exp</span> := range exps {
-        <span class="keyword">if</span> isOperate<span class="params">(exp)</span> {
-            <span class="keyword">if</span> op, ok := isPop<span class="params">(list1, exp)</span>; ok {
-                <span class="keyword">for</span> _, s := range op {
-                    list2.PushBack<span class="params">(s)</span>
-                }
-            }
-            <span class="keyword">if</span> <span class="built_in">exp</span> == <span class="string">")"</span> {
-                continue
-            }
-            list1.PushBack<span class="params">(exp)</span>
-        } <span class="keyword">else</span> {
-            list2.PushBack<span class="params">(exp)</span>
-        }
-    }
-
-    <span class="keyword">for</span> cur := list1.Back<span class="params">()</span>; cur <span class="built_in">!</span>= nil; cur = cur.Prev<span class="params">()</span> {
-        list2.PushBack<span class="params">(cur.Value)</span>
-    }
-
-    <span class="keyword">for</span> cur := list2.Front<span class="params">()</span>; cur <span class="built_in">!</span>= nil; cur = cur.Next<span class="params">()</span> {
-        <span class="keyword">if</span> curValue, ok := cur.Value.<span class="params">(string)</span>; ok {
-            exps2 = append<span class="params">(exps2, curValue)</span>
-        }
-    }
-    return
-}
-</code></pre><h2 id="代码在这里">代码在<a href="https://github.com/khalily/caculator" target="_blank" rel="external">这里</a></h2></span>
+        <span itemprop="articleBody"><h3 id="1-_git_subtree">1. git subtree</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># git <span class="keyword">subtree </span>提示不支持该命令时</span><br><span class="line"><span class="label">sudo</span> chmod +x /usr/share/doc/git/contrib/<span class="keyword">subtree/git-subtree.sh</span><br><span class="line"></span><span class="label">sudo</span> ln -s /usr/share/doc/git/contrib/<span class="keyword">subtree/git-subtree.sh </span>/usr/lib/git-core/git-<span class="keyword">subtree</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加仓库并fetch</span></span><br><span class="line">git remote add -f <span class="variable">&lt;子仓库名&gt;</span> <span class="variable">&lt;子仓库地址&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 加上--squash 表示合并子仓库的所有提交为一次提交（感觉不加好些，可以看日志记录）</span></span><br><span class="line">git subtree add --prefix=<span class="variable">&lt;子目录名&gt;</span> <span class="variable">&lt;子仓库名&gt;</span> <span class="variable">&lt;分支&gt;</span> --squash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从远程子仓库同步</span></span><br><span class="line">git subtree pull --prefix=<span class="variable">&lt;子目录名&gt;</span> <span class="variable">&lt;远程分支&gt;</span> <span class="variable">&lt;分支&gt;</span> --squash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 向远程子仓库推送</span></span><br><span class="line">git subtree push --prefix=<span class="variable">&lt;子目录名&gt;</span> <span class="variable">&lt;远程分支名&gt;</span> 分支</span><br></pre></td></tr></table></figure>
+<h3 id="2-_git_submodule">2. git submodule</h3><p>注意： submodule 只能在&lt;子目录&gt;下看到log信息，如果需要在web UI 下看log 需要对&lt;子仓库地址&gt;可访问<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加子仓库</span></span><br><span class="line">git submodule add <span class="variable">&lt;子仓库地址&gt;</span> <span class="variable">&lt;子目录名&gt;</span></span><br><span class="line"><span class="comment"># 删除子仓库</span></span><br><span class="line">git submodule rm <span class="variable">&lt;子目录名&gt;</span></span><br><span class="line"><span class="comment"># 同步子仓库</span></span><br><span class="line">git submoudle update</span><br></pre></td></tr></table></figure></p>
+</span>
       
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git/" rel="tag">#git</a>
+          
+        </div>
       
 
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2013/06/04/zhihu-test/" rel="prev">知乎笔试</a>
+              <a href="/2015/07/30/sublime-config/" rel="prev">Sublime Text 2 配置分享</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2013/05/31/gscan/" rel="next">用Go语言实现的一个端口扫描器--gscan</a>
+              <a href="/2013/06/06/binary-expression-tree/" rel="next">golang面向对象之--二叉表达式树</a>
             
           </div>
         </div>
@@ -342,8 +269,8 @@ Please input express:
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2013/06/03/caculate-of-go/"
-                       data-title="用 golang 实现的计算器" data-url="http://khalily.github.io/2013/06/03/caculate-of-go/">
+                  <div class="ds-thread" data-thread-key="2015/07/29/git-use/"
+                       data-title="git 使用札记" data-url="http://khalily.github.io/2015/07/29/git-use/">
                   </div>
                 
               </div>
@@ -442,7 +369,7 @@ Please input express:
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#功能支持"><span class="nav-number">1.</span> <span class="nav-text">功能支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单演示"><span class="nav-number">2.</span> <span class="nav-text">简单演示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现流程"><span class="nav-number">3.</span> <span class="nav-text">实现流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后缀到前缀的转换"><span class="nav-number">4.</span> <span class="nav-text">后缀到前缀的转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码在这里"><span class="nav-number">5.</span> <span class="nav-text">代码在这里</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_git_subtree"><span class="nav-number">1.</span> <span class="nav-text">1. git subtree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_git_submodule"><span class="nav-number">2.</span> <span class="nav-text">2. git submodule</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
