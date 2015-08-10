@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="Hexo,next" />
+  <meta name="keywords" content="ats," />
 
 
 
@@ -39,47 +39,40 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="功能支持
-简单四则运算
-优先级支持
-小括号支持
+<meta name="description" content="记录给ATS做cache预热的方法
+##磁盘准备
 
-简单演示$ ./caculator
-Please input express:
-1+2*1-12+2-(1+2*3)
-[1 + 2 * 1 - 12 + 2 - ( 1 + 2 * 3 )]      //中缀表达式
-[1 2 1 * + 12 - 2 + 1 2 3 * + -]            //后缀表达式
--14">
+4 块 SSD 硬盘, 480G
+给4块硬盘分别做 RAID 0 （记住要初始化）
+编辑udev rules 文件, 配置raw磁盘
+# Apache Traffic Server owns disk for RAW access
+
+ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用 golang 实现的计算器">
-<meta property="og:url" content="http://khalily.github.io/2013/06/03/caculate-of-go/index.html">
+<meta property="og:title" content="记录 - 给 ATS 打 Cache">
+<meta property="og:url" content="http://khalily.github.io/2014/10/10/ats-cache/index.html">
 <meta property="og:site_name" content="Talk ☯ Me">
-<meta property="og:description" content="功能支持
-简单四则运算
-优先级支持
-小括号支持
+<meta property="og:description" content="记录给ATS做cache预热的方法
+##磁盘准备
 
-简单演示$ ./caculator
-Please input express:
-1+2*1-12+2-(1+2*3)
-[1 + 2 * 1 - 12 + 2 - ( 1 + 2 * 3 )]      //中缀表达式
-[1 2 1 * + 12 - 2 + 1 2 3 * + -]            //后缀表达式
--14">
-<meta property="og:image" content="http://khalily.github.io/imgs/caculate.png">
-<meta property="og:updated_time" content="2015-07-30T08:54:51.000Z">
+4 块 SSD 硬盘, 480G
+给4块硬盘分别做 RAID 0 （记住要初始化）
+编辑udev rules 文件, 配置raw磁盘
+# Apache Traffic Server owns disk for RAW access
+
+ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw">
+<meta property="og:updated_time" content="2015-08-10T03:12:14.360Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用 golang 实现的计算器">
-<meta name="twitter:description" content="功能支持
-简单四则运算
-优先级支持
-小括号支持
+<meta name="twitter:title" content="记录 - 给 ATS 打 Cache">
+<meta name="twitter:description" content="记录给ATS做cache预热的方法
+##磁盘准备
 
-简单演示$ ./caculator
-Please input express:
-1+2*1-12+2-(1+2*3)
-[1 + 2 * 1 - 12 + 2 - ( 1 + 2 * 3 )]      //中缀表达式
-[1 2 1 * + 12 - 2 + 1 2 3 * + -]            //后缀表达式
--14">
+4 块 SSD 硬盘, 480G
+给4块硬盘分别做 RAID 0 （记住要初始化）
+编辑udev rules 文件, 配置raw磁盘
+# Apache Traffic Server owns disk for RAW access
+
+ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -89,7 +82,7 @@ Please input express:
   };
 </script>
 
-    <title> 用 golang 实现的计算器 // Talk ☯ Me </title>
+    <title> 记录 - 给 ATS 打 Cache // Talk ☯ Me </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -210,7 +203,7 @@ Please input express:
           
           
             
-              用 golang 实现的计算器
+              记录 - 给 ATS 打 Cache
             
           
         </h1>
@@ -219,30 +212,19 @@ Please input express:
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2013-06-03T08:00:00+08:00" content="2013-06-03">
-            2013-06-03
+          <time itemprop="dateCreated" datetime="2014-10-10T11:07:52+08:00" content="2014-10-10">
+            2014-10-10
           </time>
         </span>
 
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a></span>
-
-              
-              
-
-            
-          </span>
         
 
         
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2013/06/03/caculate-of-go/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2013/06/03/caculate-of-go/" itemprop="commentsCount"></span>
+              <a href="/2014/10/10/ats-cache/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2014/10/10/ats-cache/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -256,67 +238,80 @@ Please input express:
       
 
       
-        <span itemprop="articleBody"><h2 id="功能支持">功能支持</h2><ul>
-<li>简单四则运算</li>
-<li>优先级支持</li>
-<li>小括号支持</li>
-</ul>
-<h2 id="简单演示">简单演示</h2><pre><code>$ ./caculator
-Please input express:
-<span class="number">1</span>+<span class="number">2</span>*<span class="number">1</span>-<span class="number">12</span>+<span class="number">2</span>-(<span class="number">1</span>+<span class="number">2</span>*<span class="number">3</span>)
-[<span class="number">1</span> + <span class="number">2</span> * <span class="number">1</span> - <span class="number">12</span> + <span class="number">2</span> - ( <span class="number">1</span> + <span class="number">2</span> * <span class="number">3</span> )]      <span class="comment">//中缀表达式</span>
-[<span class="number">1</span> <span class="number">2</span> <span class="number">1</span> * + <span class="number">12</span> - <span class="number">2</span> + <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> * + -]            <span class="comment">//后缀表达式</span>
--<span class="number">14</span>                                        <span class="comment">//结果</span>
-</code></pre><h2 id="实现流程">实现流程</h2><p><img src="imgs/caculate.png" alt="caculate.png"></p>
-<h2 id="后缀到前缀的转换">后缀到前缀的转换</h2><pre><code>func pre2stuf<span class="params">(exps []string)</span> <span class="params">(exps2 []string)</span> {
-    list1 := list.New<span class="params">()</span>
-    list2 := list.New<span class="params">()</span>
+        <span itemprop="articleBody"><p>记录给ATS做cache预热的方法</p>
+<p>##磁盘准备</p>
+<ol>
+<li>4 块 SSD 硬盘, 480G</li>
+<li>给4块硬盘分别做 RAID 0 （记住要初始化）</li>
+<li><p>编辑udev rules 文件, 配置raw磁盘</p>
+<pre><code><span class="preprocessor"># Apache Traffic Server owns disk for RAW access</span>
 
-    <span class="keyword">for</span> _, <span class="built_in">exp</span> := range exps {
-        <span class="keyword">if</span> isOperate<span class="params">(exp)</span> {
-            <span class="keyword">if</span> op, ok := isPop<span class="params">(list1, exp)</span>; ok {
-                <span class="keyword">for</span> _, s := range op {
-                    list2.PushBack<span class="params">(s)</span>
-                }
-            }
-            <span class="keyword">if</span> <span class="built_in">exp</span> == <span class="string">")"</span> {
-                continue
-            }
-            list1.PushBack<span class="params">(exp)</span>
-        } <span class="keyword">else</span> {
-            list2.PushBack<span class="params">(exp)</span>
-        }
-    }
+ACTION==<span class="string">"add"</span>, KERNEL==<span class="string">"sdb"</span>, <span class="built_in">RUN</span>+=<span class="string">"/bin/raw /dev/raw/raw1 %N"</span>
+ACTION==<span class="string">"add"</span>, KERNEL==<span class="string">"sdc"</span>, <span class="built_in">RUN</span>+=<span class="string">"/bin/raw /dev/raw/raw2 %N"</span>
+ACTION==<span class="string">"add"</span>, KERNEL==<span class="string">"sdd"</span>, <span class="built_in">RUN</span>+=<span class="string">"/bin/raw /dev/raw/raw3 %N"</span>
+ACTION==<span class="string">"add"</span>, KERNEL==<span class="string">"sde"</span>, <span class="built_in">RUN</span>+=<span class="string">"/bin/raw /dev/raw/raw4 %N"</span>
 
-    <span class="keyword">for</span> cur := list1.Back<span class="params">()</span>; cur <span class="built_in">!</span>= nil; cur = cur.Prev<span class="params">()</span> {
-        list2.PushBack<span class="params">(cur.Value)</span>
-    }
-
-    <span class="keyword">for</span> cur := list2.Front<span class="params">()</span>; cur <span class="built_in">!</span>= nil; cur = cur.Next<span class="params">()</span> {
-        <span class="keyword">if</span> curValue, ok := cur.Value.<span class="params">(string)</span>; ok {
-            exps2 = append<span class="params">(exps2, curValue)</span>
-        }
-    }
-    return
-}
-</code></pre><h2 id="代码在这里">代码在<a href="https://github.com/khalily/caculator" target="_blank" rel="external">这里</a></h2></span>
+KERNEL==<span class="string">"raw[1-4]"</span>, OWNER=<span class="string">"nobody"</span>, GROUP:=<span class="string">"trafficserver"</span>, MODE=<span class="string">"660</span>
+</code></pre><p>执行命令</p>
+<pre><code><span class="title">groupadd</span> trafficserver
+start_udev
+</code></pre></li>
+</ol>
+<p>##ats配置文件</p>
+<p>###records.conf<br>    CONFIG proxy.config.http.push_method_enabled INT 1<br>    CONFIG proxy.config.http.cache.when_to_revalidate INT 3<br>    CONFIG proxy.config.http.cache.required_headers INT 0<br>    CONFIG proxy.config.log.logfile_dir STRING /data/var/log/trafficserver</p>
+<p>###remap.conf</p>
+<pre><code>regex_map http://(.*) http://<span class="variable">$1</span>
+regex_map http://(.*):<span class="number">8080</span> http://<span class="variable">$1</span>
+</code></pre><p>###storage.conf</p>
+<pre><code><span class="regexp">/dev/</span>raw/raw1 
+<span class="regexp">/dev/</span>raw/raw2 
+<span class="regexp">/dev/</span>raw/raw3 
+<span class="regexp">/dev/</span>raw/raw4 
+</code></pre><p>###ip_allow.config<br>    src_ip=192.168.5.151                             action=ip_allow method=ALL</p>
+<p>##开始执行</p>
+<p>###创建日志目录<br>    mkdir -p /data/var/log/trafficserver</p>
+<p>###Clear Cache<br>    traffic_server -Cclear</p>
+<p>###Run Manager<br>    traffic_manager </p>
+<p>###日志查看<br>    traffic_logcat -f squid.blog</p>
+<p>###自动生成URL<br>    sh gen_urls.sh</p>
+<h3 id="运行py脚本">运行py脚本</h3><pre><code><span class="keyword">sh</span> ats_cache.<span class="keyword">sh</span>
+</code></pre><p>###补充<br>    由于该脚本频繁创建、关闭连接，导致系统出现很多TIME_OUT，用光了系统可用端口，故，<br>    修改两个内核参数，<br>    如下：</p>
+<pre><code><span class="comment">#开启对于TCP时间戳的支持,若该项设置为0，则下面一项设置不起作用</span>
+echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/tcp_timestamps
+<span class="comment">#表示开启TCP连接中TIME-WAIT sockets的快速回收</span>
+echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/ipv4.tcp_tw_recycle
+</code></pre><p>##相关shell脚本代码<br>    git clone git@github.com:khalily/ats-cache.git</p>
+<p>##参考资料</p>
+<ol>
+<li><a href="http://blog.csdn.net/tianlesoftware/article/details/5429634" target="_blank" rel="external">RAID 磁盘阵列详解</a></li>
+<li><a href="http://czmmiao.iteye.com/blog/1587170" target="_blank" rel="external">raw 磁盘详解</a></li>
+<li><a href="http://www.processon.com/view/5256dee60cf2f4b4183f76f5" target="_blank" rel="external">ATS raw磁盘布局</a></li>
+<li><a href="http://www.8layer8.com/?p=872" target="_blank" rel="external">ATS Sample config</a></li>
+</ol>
+</span>
       
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ats/" rel="tag">#ats</a>
+          
+        </div>
       
 
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2013/06/04/zhihu-test/" rel="prev">知乎笔试</a>
+              <a href="/2015/07/29/git-use/" rel="prev">git 使用札记</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2013/05/31/gscan/" rel="next">用Go语言实现的一个端口扫描器--gscan</a>
+              <a href="/2013/06/06/binary-expression-tree/" rel="next">golang面向对象之--二叉表达式树</a>
             
           </div>
         </div>
@@ -342,8 +337,8 @@ Please input express:
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2013/06/03/caculate-of-go/"
-                       data-title="用 golang 实现的计算器" data-url="http://khalily.github.io/2013/06/03/caculate-of-go/">
+                  <div class="ds-thread" data-thread-key="2014/10/10/ats-cache/"
+                       data-title="记录 - 给 ATS 打 Cache" data-url="http://khalily.github.io/2014/10/10/ats-cache/">
                   </div>
                 
               </div>
@@ -442,7 +437,7 @@ Please input express:
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#功能支持"><span class="nav-number">1.</span> <span class="nav-text">功能支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单演示"><span class="nav-number">2.</span> <span class="nav-text">简单演示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现流程"><span class="nav-number">3.</span> <span class="nav-text">实现流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后缀到前缀的转换"><span class="nav-number">4.</span> <span class="nav-text">后缀到前缀的转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码在这里"><span class="nav-number">5.</span> <span class="nav-text">代码在这里</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#运行py脚本"><span class="nav-number">1.</span> <span class="nav-text">运行py脚本</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

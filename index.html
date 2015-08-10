@@ -372,6 +372,124 @@
           
           
             
+              <a class="post-title-link" href="/2014/10/10/ats-cache/" itemprop="url">
+                记录 - 给 ATS 打 Cache
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2014-10-10T11:07:52+08:00" content="2014-10-10">
+            2014-10-10
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2014/10/10/ats-cache/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2014/10/10/ats-cache/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody"><p>记录给ATS做cache预热的方法</p>
+<p>##磁盘准备</p>
+<ol>
+<li>4 块 SSD 硬盘, 480G</li>
+<li>给4块硬盘分别做 RAID 0 （记住要初始化）</li>
+<li><p>编辑udev rules 文件, 配置raw磁盘</p>
+<pre><code><span class="preprocessor"># Apache Traffic Server owns disk for RAW access</span>
+
+ACTION==<span class="string">"add"</span>, KERNEL==<span class="string">"sdb"</span>, <span class="built_in">RUN</span>+=<span class="string">"/bin/raw /dev/raw/raw1 %N"</span>
+ACTION==<span class="string">"add"</span>, KERNEL==<span class="string">"sdc"</span>, <span class="built_in">RUN</span>+=<span class="string">"/bin/raw /dev/raw/raw2 %N"</span>
+ACTION==<span class="string">"add"</span>, KERNEL==<span class="string">"sdd"</span>, <span class="built_in">RUN</span>+=<span class="string">"/bin/raw /dev/raw/raw3 %N"</span>
+ACTION==<span class="string">"add"</span>, KERNEL==<span class="string">"sde"</span>, <span class="built_in">RUN</span>+=<span class="string">"/bin/raw /dev/raw/raw4 %N"</span>
+
+KERNEL==<span class="string">"raw[1-4]"</span>, OWNER=<span class="string">"nobody"</span>, GROUP:=<span class="string">"trafficserver"</span>, MODE=<span class="string">"660</span>
+</code></pre><p>执行命令</p>
+<pre><code><span class="title">groupadd</span> trafficserver
+start_udev
+</code></pre></li>
+</ol>
+<p>##ats配置文件</p>
+<p>###records.conf<br>    CONFIG proxy.config.http.push_method_enabled INT 1<br>    CONFIG proxy.config.http.cache.when_to_revalidate INT 3<br>    CONFIG proxy.config.http.cache.required_headers INT 0<br>    CONFIG proxy.config.log.logfile_dir STRING /data/var/log/trafficserver</p>
+<p>###remap.conf</p>
+<pre><code>regex_map http://(.*) http://<span class="variable">$1</span>
+regex_map http://(.*):<span class="number">8080</span> http://<span class="variable">$1</span>
+</code></pre><p>###storage.conf</p>
+<pre><code><span class="regexp">/dev/</span>raw/raw1 
+<span class="regexp">/dev/</span>raw/raw2 
+<span class="regexp">/dev/</span>raw/raw3 
+<span class="regexp">/dev/</span>raw/raw4 
+</code></pre><p>###ip_allow.config<br>    src_ip=192.168.5.151                             action=ip_allow method=ALL</p>
+<p>##开始执行</p>
+<p>###创建日志目录<br>    mkdir -p /data/var/log/trafficserver</p>
+<p>###Clear Cache<br>    traffic_server -Cclear</p>
+<p>###Run Manager<br>    traffic_manager </p>
+<p>###日志查看<br>    traffic_logcat -f squid.blog</p>
+<p>###自动生成URL<br>    sh gen_urls.sh</p>
+<h3 id="运行py脚本">运行py脚本</h3><pre><code><span class="keyword">sh</span> ats_cache.<span class="keyword">sh</span>
+</code></pre><p>###补充<br>    由于该脚本频繁创建、关闭连接，导致系统出现很多TIME_OUT，用光了系统可用端口，故，<br>    修改两个内核参数，<br>    如下：</p>
+<pre><code><span class="comment">#开启对于TCP时间戳的支持,若该项设置为0，则下面一项设置不起作用</span>
+echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/tcp_timestamps
+<span class="comment">#表示开启TCP连接中TIME-WAIT sockets的快速回收</span>
+echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/ipv4.tcp_tw_recycle
+</code></pre><p>##相关shell脚本代码<br>    git clone git@github.com:khalily/ats-cache.git</p>
+<p>##参考资料</p>
+<ol>
+<li><a href="http://blog.csdn.net/tianlesoftware/article/details/5429634" target="_blank" rel="external">RAID 磁盘阵列详解</a></li>
+<li><a href="http://czmmiao.iteye.com/blog/1587170" target="_blank" rel="external">raw 磁盘详解</a></li>
+<li><a href="http://www.processon.com/view/5256dee60cf2f4b4183f76f5" target="_blank" rel="external">ATS raw磁盘布局</a></li>
+<li><a href="http://www.8layer8.com/?p=872" target="_blank" rel="external">ATS Sample config</a></li>
+</ol>
+</span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2013/06/06/binary-expression-tree/" itemprop="url">
                 golang面向对象之--二叉表达式树
               </a>
@@ -885,103 +1003,13 @@ Please input express:
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2013/05/31/gscan/" itemprop="url">
-                用Go语言实现的一个端口扫描器--gscan
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2013-05-31T08:00:00+08:00" content="2013-05-31">
-            2013-05-31
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a></span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2013/05/31/gscan/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2013/05/31/gscan/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody"><h2 id="程序功能参数">程序功能参数</h2><pre><code>Usage of ./gscan:
-  -h=<span class="string">"help"</span>: help doc
-  -ip=<span class="string">"127.0.0.1"</span>: IP range of scan. Example:
-        <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>
-        <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>, <span class="number">192.168</span><span class="number">.1</span><span class="number">.5</span>
-        <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>-<span class="number">192.168</span><span class="number">.1</span><span class="number">.100</span>
-  -p=<span class="string">"1-1024"</span>: Port range of scan. Example:
-        <span class="number">135</span>
-        <span class="number">135</span>, <span class="number">445</span>, <span class="number">3389</span>
-        <span class="number">1</span>-<span class="number">1024</span>
-  -w=<span class="string">"connect"</span>: Way of scan. Expample
-        connect
-        syn
-        fin
-</code></pre><h2 id="实现思想">实现思想</h2><p>一个端口一个<code>goroutine</code>，用一个<code>chanel</code>接收所有<code>goroutine</code>返回的扫描结果</p>
-<h2 id="代码在这里">代码在<a href="https://github.com/khalily/gscan" target="_blank" rel="external">这里</a></h2></span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
+  </nav>
+
 
             </div>
 
@@ -1014,7 +1042,7 @@ Please input express:
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1028,7 +1056,7 @@ Please input express:
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
