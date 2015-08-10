@@ -59,7 +59,7 @@ ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/r
 # Apache Traffic Server owns disk for RAW access
 
 ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw1 %">
-<meta property="og:updated_time" content="2015-08-10T03:16:29.644Z">
+<meta property="og:updated_time" content="2015-08-10T03:17:43.626Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记录 - 给 ATS 打 Cache">
 <meta name="twitter:description" content="记录给ATS做cache预热的方法
@@ -277,7 +277,7 @@ regex_map http://(.*):<span class="number">8080</span> http://<span class="varia
     echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/tcp_timestamps
     <span class="comment">#表示开启TCP连接中TIME-WAIT sockets的快速回收</span>
     echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/ipv4.tcp_tw_recycle
-</code></pre><h2 id="相关shell脚本代码">相关shell脚本代码</h2><pre><code>`git clone git<span class="annotation">@github</span>.<span class="string">com:</span>khalily/ats-cache.git`
+</code></pre><h2 id="相关shell脚本代码">相关shell脚本代码</h2><pre><code>git clone git<span class="annotation">@github</span>.<span class="string">com:</span>khalily/ats-cache.git
 </code></pre><h2 id="参考资料">参考资料</h2><ol>
 <li><a href="http://blog.csdn.net/tianlesoftware/article/details/5429634" target="_blank" rel="external">RAID 磁盘阵列详解</a></li>
 <li><a href="http://czmmiao.iteye.com/blog/1587170" target="_blank" rel="external">raw 磁盘详解</a></li>
