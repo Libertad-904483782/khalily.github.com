@@ -40,39 +40,36 @@
 
 
 <meta name="description" content="记录给ATS做cache预热的方法
-##磁盘准备
-
+磁盘准备
 4 块 SSD 硬盘, 480G
 给4块硬盘分别做 RAID 0 （记住要初始化）
 编辑udev rules 文件, 配置raw磁盘
 # Apache Traffic Server owns disk for RAW access
 
-ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw">
+ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw1 %">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记录 - 给 ATS 打 Cache">
 <meta property="og:url" content="http://khalily.github.io/2014/10/10/ats-cache/index.html">
 <meta property="og:site_name" content="Talk ☯ Me">
 <meta property="og:description" content="记录给ATS做cache预热的方法
-##磁盘准备
-
+磁盘准备
 4 块 SSD 硬盘, 480G
 给4块硬盘分别做 RAID 0 （记住要初始化）
 编辑udev rules 文件, 配置raw磁盘
 # Apache Traffic Server owns disk for RAW access
 
-ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw">
-<meta property="og:updated_time" content="2015-08-10T03:12:14.360Z">
+ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw1 %">
+<meta property="og:updated_time" content="2015-08-10T03:16:29.644Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记录 - 给 ATS 打 Cache">
 <meta name="twitter:description" content="记录给ATS做cache预热的方法
-##磁盘准备
-
+磁盘准备
 4 块 SSD 硬盘, 480G
 给4块硬盘分别做 RAID 0 （记住要初始化）
 编辑udev rules 文件, 配置raw磁盘
 # Apache Traffic Server owns disk for RAW access
 
-ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw">
+ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/raw1 %">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -239,8 +236,7 @@ ACTION==&quot;add&quot;, KERNEL==&quot;sdb&quot;, RUN+=&quot;/bin/raw /dev/raw/r
 
       
         <span itemprop="articleBody"><p>记录给ATS做cache预热的方法</p>
-<p>##磁盘准备</p>
-<ol>
+<h2 id="磁盘准备">磁盘准备</h2><ol>
 <li>4 块 SSD 硬盘, 480G</li>
 <li>给4块硬盘分别做 RAID 0 （记住要初始化）</li>
 <li><p>编辑udev rules 文件, 配置raw磁盘</p>
@@ -257,32 +253,32 @@ KERNEL==<span class="string">"raw[1-4]"</span>, OWNER=<span class="string">"nobo
 start_udev
 </code></pre></li>
 </ol>
-<p>##ats配置文件</p>
-<p>###records.conf<br>    CONFIG proxy.config.http.push_method_enabled INT 1<br>    CONFIG proxy.config.http.cache.when_to_revalidate INT 3<br>    CONFIG proxy.config.http.cache.required_headers INT 0<br>    CONFIG proxy.config.log.logfile_dir STRING /data/var/log/trafficserver</p>
-<p>###remap.conf</p>
-<pre><code>regex_map http://(.*) http://<span class="variable">$1</span>
+<h2 id="ats配置文件">ats配置文件</h2><h3 id="records-conf">records.conf</h3><pre><code>CONFIG proxy<span class="class">.config</span><span class="class">.http</span><span class="class">.push_method_enabled</span> INT <span class="number">1</span>
+CONFIG proxy<span class="class">.config</span><span class="class">.http</span><span class="class">.cache</span><span class="class">.when_to_revalidate</span> INT <span class="number">3</span>
+CONFIG proxy<span class="class">.config</span><span class="class">.http</span><span class="class">.cache</span><span class="class">.required_headers</span> INT <span class="number">0</span>
+CONFIG proxy<span class="class">.config</span><span class="class">.log</span><span class="class">.logfile_dir</span> STRING /data/var/log/trafficserver
+</code></pre><h3 id="remap-conf">remap.conf</h3><pre><code>regex_map http://(.*) http://<span class="variable">$1</span>
 regex_map http://(.*):<span class="number">8080</span> http://<span class="variable">$1</span>
-</code></pre><p>###storage.conf</p>
-<pre><code><span class="regexp">/dev/</span>raw/raw1 
+</code></pre><h3 id="storage-conf">storage.conf</h3><pre><code><span class="regexp">/dev/</span>raw/raw1 
 <span class="regexp">/dev/</span>raw/raw2 
 <span class="regexp">/dev/</span>raw/raw3 
 <span class="regexp">/dev/</span>raw/raw4 
-</code></pre><p>###ip_allow.config<br>    src_ip=192.168.5.151                             action=ip_allow method=ALL</p>
-<p>##开始执行</p>
-<p>###创建日志目录<br>    mkdir -p /data/var/log/trafficserver</p>
-<p>###Clear Cache<br>    traffic_server -Cclear</p>
-<p>###Run Manager<br>    traffic_manager </p>
-<p>###日志查看<br>    traffic_logcat -f squid.blog</p>
-<p>###自动生成URL<br>    sh gen_urls.sh</p>
-<h3 id="运行py脚本">运行py脚本</h3><pre><code><span class="keyword">sh</span> ats_cache.<span class="keyword">sh</span>
-</code></pre><p>###补充<br>    由于该脚本频繁创建、关闭连接，导致系统出现很多TIME_OUT，用光了系统可用端口，故，<br>    修改两个内核参数，<br>    如下：</p>
-<pre><code><span class="comment">#开启对于TCP时间戳的支持,若该项设置为0，则下面一项设置不起作用</span>
-echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/tcp_timestamps
-<span class="comment">#表示开启TCP连接中TIME-WAIT sockets的快速回收</span>
-echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/ipv4.tcp_tw_recycle
-</code></pre><p>##相关shell脚本代码<br>    git clone git@github.com:khalily/ats-cache.git</p>
-<p>##参考资料</p>
-<ol>
+</code></pre><h3 id="ip_allow-config">ip_allow.config</h3><pre><code>src_ip=<span class="number">192</span>.<span class="number">168</span>.<span class="number">5</span>.<span class="number">151</span>                             action=ip_allow <span class="keyword">method</span>=<span class="type">ALL</span>
+</code></pre><h2 id="开始执行">开始执行</h2><h3 id="创建日志目录">创建日志目录</h3><pre><code>mkdir <span class="attribute">-p</span> /<span class="built_in">data</span>/<span class="built_in">var</span>/<span class="keyword">log</span>/trafficserver
+</code></pre><h3 id="Clear_Cache">Clear Cache</h3><pre><code><span class="title">traffic_server</span> -Cclear
+</code></pre><h3 id="Run_Manager">Run Manager</h3><pre><code><span class="title">traffic_manager</span> 
+</code></pre><h3 id="日志查看">日志查看</h3><pre><code>traffic_logcat <span class="operator">-f</span> squid.blog
+</code></pre><h3 id="自动生成URL">自动生成URL</h3><pre><code><span class="keyword">sh</span> gen_urls.<span class="keyword">sh</span>
+</code></pre><h3 id="运行py脚本">运行py脚本</h3><pre><code><span class="keyword">sh</span> ats_cache.<span class="keyword">sh</span>
+</code></pre><h3 id="补充">补充</h3><pre><code>由于该脚本频繁创建、关闭连接，导致系统出现很多<span class="type">TIME_OUT</span>，用光了系统可用端口，故，
+修改两个内核参数，
+如下：
+    <span class="comment">#开启对于TCP时间戳的支持,若该项设置为0，则下面一项设置不起作用</span>
+    echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/tcp_timestamps
+    <span class="comment">#表示开启TCP连接中TIME-WAIT sockets的快速回收</span>
+    echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/ipv4.tcp_tw_recycle
+</code></pre><h2 id="相关shell脚本代码">相关shell脚本代码</h2><pre><code>`git clone git<span class="annotation">@github</span>.<span class="string">com:</span>khalily/ats-cache.git`
+</code></pre><h2 id="参考资料">参考资料</h2><ol>
 <li><a href="http://blog.csdn.net/tianlesoftware/article/details/5429634" target="_blank" rel="external">RAID 磁盘阵列详解</a></li>
 <li><a href="http://czmmiao.iteye.com/blog/1587170" target="_blank" rel="external">raw 磁盘详解</a></li>
 <li><a href="http://www.processon.com/view/5256dee60cf2f4b4183f76f5" target="_blank" rel="external">ATS raw磁盘布局</a></li>
@@ -437,7 +433,7 @@ echo <span class="number">1</span> &gt; /<span class="keyword">proc</span>/sys/n
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#运行py脚本"><span class="nav-number">1.</span> <span class="nav-text">运行py脚本</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘准备"><span class="nav-number">1.</span> <span class="nav-text">磁盘准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ats配置文件"><span class="nav-number">2.</span> <span class="nav-text">ats配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#records-conf"><span class="nav-number">2.1.</span> <span class="nav-text">records.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#remap-conf"><span class="nav-number">2.2.</span> <span class="nav-text">remap.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#storage-conf"><span class="nav-number">2.3.</span> <span class="nav-text">storage.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ip_allow-config"><span class="nav-number">2.4.</span> <span class="nav-text">ip_allow.config</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始执行"><span class="nav-number">3.</span> <span class="nav-text">开始执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建日志目录"><span class="nav-number">3.1.</span> <span class="nav-text">创建日志目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clear_Cache"><span class="nav-number">3.2.</span> <span class="nav-text">Clear Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run_Manager"><span class="nav-number">3.3.</span> <span class="nav-text">Run Manager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志查看"><span class="nav-number">3.4.</span> <span class="nav-text">日志查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动生成URL"><span class="nav-number">3.5.</span> <span class="nav-text">自动生成URL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行py脚本"><span class="nav-number">3.6.</span> <span class="nav-text">运行py脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number">3.7.</span> <span class="nav-text">补充</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关shell脚本代码"><span class="nav-number">4.</span> <span class="nav-text">相关shell脚本代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
