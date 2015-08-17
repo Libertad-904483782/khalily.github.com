@@ -180,6 +180,128 @@
           
           
             
+              <a class="post-title-link" href="/2013/06/03/caculate-of-go/" itemprop="url">
+                用 golang 实现的计算器
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2013-06-03T08:00:00+08:00" content="2013-06-03">
+            2013-06-03
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2013/06/03/caculate-of-go/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2013/06/03/caculate-of-go/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody"><h2 id="功能支持">功能支持</h2><ul>
+<li>简单四则运算</li>
+<li>优先级支持</li>
+<li>小括号支持</li>
+</ul>
+<h2 id="简单演示">简单演示</h2><pre><code>$ ./caculator
+Please input express:
+<span class="number">1</span>+<span class="number">2</span>*<span class="number">1</span>-<span class="number">12</span>+<span class="number">2</span>-(<span class="number">1</span>+<span class="number">2</span>*<span class="number">3</span>)
+[<span class="number">1</span> + <span class="number">2</span> * <span class="number">1</span> - <span class="number">12</span> + <span class="number">2</span> - ( <span class="number">1</span> + <span class="number">2</span> * <span class="number">3</span> )]      <span class="comment">//中缀表达式</span>
+[<span class="number">1</span> <span class="number">2</span> <span class="number">1</span> * + <span class="number">12</span> - <span class="number">2</span> + <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> * + -]            <span class="comment">//后缀表达式</span>
+-<span class="number">14</span>                                        <span class="comment">//结果</span>
+</code></pre><h2 id="实现流程">实现流程</h2><p><img src="imgs/caculate.png" alt="caculate.png"></p>
+<h2 id="后缀到前缀的转换">后缀到前缀的转换</h2><pre><code>func pre2stuf<span class="params">(exps []string)</span> <span class="params">(exps2 []string)</span> {
+    list1 := list.New<span class="params">()</span>
+    list2 := list.New<span class="params">()</span>
+
+    <span class="keyword">for</span> _, <span class="built_in">exp</span> := range exps {
+        <span class="keyword">if</span> isOperate<span class="params">(exp)</span> {
+            <span class="keyword">if</span> op, ok := isPop<span class="params">(list1, exp)</span>; ok {
+                <span class="keyword">for</span> _, s := range op {
+                    list2.PushBack<span class="params">(s)</span>
+                }
+            }
+            <span class="keyword">if</span> <span class="built_in">exp</span> == <span class="string">")"</span> {
+                continue
+            }
+            list1.PushBack<span class="params">(exp)</span>
+        } <span class="keyword">else</span> {
+            list2.PushBack<span class="params">(exp)</span>
+        }
+    }
+
+    <span class="keyword">for</span> cur := list1.Back<span class="params">()</span>; cur <span class="built_in">!</span>= nil; cur = cur.Prev<span class="params">()</span> {
+        list2.PushBack<span class="params">(cur.Value)</span>
+    }
+
+    <span class="keyword">for</span> cur := list2.Front<span class="params">()</span>; cur <span class="built_in">!</span>= nil; cur = cur.Next<span class="params">()</span> {
+        <span class="keyword">if</span> curValue, ok := cur.Value.<span class="params">(string)</span>; ok {
+            exps2 = append<span class="params">(exps2, curValue)</span>
+        }
+    }
+    return
+}
+</code></pre><h2 id="代码在这里">代码在<a href="https://github.com/khalily/caculator" target="_blank" rel="external">这里</a></h2></span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2013/05/31/gscan/" itemprop="url">
                 用Go语言实现的一个端口扫描器--gscan
               </a>
@@ -302,21 +424,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">3</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
