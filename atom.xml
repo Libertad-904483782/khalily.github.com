@@ -5,7 +5,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://khalily.github.io//"/>
-  <updated>2015-08-17T03:50:17.602Z</updated>
+  <updated>2015-08-24T03:24:43.698Z</updated>
   <id>http://khalily.github.io//</id>
   
   <author>
@@ -14,6 +14,193 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[用 Flask 和 AngularJs 实现HTTP认证]]></title>
+    <link href="http://khalily.github.io/2015/08/24/flask-angular-http-auth/"/>
+    <id>http://khalily.github.io/2015/08/24/flask-angular-http-auth/</id>
+    <published>2015-08-24T02:19:40.000Z</published>
+    <updated>2015-08-24T03:24:43.698Z</updated>
+    <content type="html"><![CDATA[<p>最近接触到angularjs这个前端框架，也学习到了用restful API的方式进行前后端的交互，在接下来的一段时间中边学习边总结这段时间的学习成果。</p>
+<p>要实现登录认证功能，常用的有以下这两种方法：</p>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Basic_access_authentication" title="Basic access authentication" target="_blank" rel="external">Basic access authentication</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Digest_access_authentication" title="Digest access authentication" target="_blank" rel="external">Digest access authentication</a></li>
+</ol>
+<p>这两种方法各有优劣，</p>
+<ul>
+<li>Basic access authentication 主要是胜在简单，只需要在Requset Header中加入 <code>Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</code>，其中字符串”Basic “后面的是”username:password”字符串的Base64编码，如果验证不成功，server会在Response Header中返回<code>WWW-Authenticate: Basic realm=&quot;domain&quot;</code>，状态码为401。但是这个方法不安全，在生产环境中须要在HTTPS下使用。但也因为他够简单，我们可以在开发测试环境中使用。</li>
+<li>Digest access authentication 顾名思义，主要是通过server端返回的随机码和摘要算法对username和password、realm以及需要发送的请求内容提取摘要，发送给server，该方法相比Basic access authentication来说稍稍复杂，但是却有较强的安全性。</li>
+</ul>
+<p>为简单和实用性，本文实现第一种方法，HTTP Basic Auth，主要用到以下插件：</p>
+<ol>
+<li><p>front-end</p>
+<p> AngularJs<br> AngularJs-storage<br> Bootstrap</p>
+</li>
+<li><p>back-end</p>
+<p> Flask==0.10.1<br> Flask-HTTPAuth==2.5.0<br> Flask-SQLAlchemy==2.0<br> Flask-Script==2.0.5<br> Jinja2==2.8<br> MarkupSafe==0.23<br> SQLAlchemy==1.0.8<br> Werkzeug==0.10.4<br> itsdangerous==0.24</p>
+</li>
+</ol>
+<h2 id="angularJs_的_AuthService">angularJs 的 AuthService</h2><p>AuthService 是我们自己定义的一个service，提供核心的认证功能，包括登录、登出、以及用token认证，关于token，需要强调的是，我们第一次登录的时候使用用户名和密码，server端返回一个token，以后进行认证的时候就使用token，以减少用户名和密码在网上传输的次数。token有使用时间限制，一般是几个小时之内。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">myApp.service(<span class="string">'AuthService'</span>, <span class="function"><span class="keyword">function</span><span class="params">(<span class="variable">$q</span>, <span class="variable">$http</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="keyword">self</span> = this;</span><br><span class="line">    <span class="keyword">self</span>.profile = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">self</span>.isAuthenticated = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">request</span><span class="params">(url, username_or_token, password)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            method: <span class="string">'GET'</span>,</span><br><span class="line">            url: url,</span><br><span class="line">            headers: &#123;</span><br><span class="line">                Accept: <span class="string">'application/json'</span>,</span><br><span class="line">                Authorization: <span class="string">'Basic '</span> + btoa(username_or_token + <span class="string">':'</span> + password)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>.signin = <span class="function"><span class="keyword">function</span> <span class="params">(options, successCallback, errorCallback)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> req = request(<span class="string">'/auth/login'</span>, options.username, options.password);</span><br><span class="line">        <span class="variable">$http</span>(req).</span><br><span class="line">        then(<span class="function"><span class="keyword">function</span><span class="params">(response)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">var</span> token = response.data.token;</span><br><span class="line">                <span class="keyword">if</span> (token) &#123;</span><br><span class="line">                    <span class="keyword">self</span>.isAuthenticated = <span class="keyword">true</span>;</span><br><span class="line">                    <span class="keyword">self</span>.profile = response.data.profile;</span><br><span class="line">                    successCallback(token);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;, <span class="function"><span class="keyword">function</span><span class="params">(error)</span> </span>&#123;</span><br><span class="line">                console.log(error.message);</span><br><span class="line">                errorCallback();</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>.signout = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">self</span>.isAuthenticated = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">self</span>.profile = <span class="keyword">null</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>.authenticate = <span class="function"><span class="keyword">function</span> <span class="params">(token)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> req = request(<span class="string">'/auth/login_with_token'</span>, token, <span class="string">''</span>);</span><br><span class="line">        <span class="keyword">var</span> deferred = <span class="variable">$q</span>.defer();</span><br><span class="line">        <span class="variable">$http</span>(req)</span><br><span class="line">            .then(<span class="function"><span class="keyword">function</span> <span class="params">(response)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">self</span>.profile = response.data.profile;</span><br><span class="line">                <span class="keyword">self</span>.isAuthenticated = <span class="keyword">true</span>;</span><br><span class="line">                deferred.resolve();</span><br><span class="line">            &#125;, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">self</span>.isAuthenticated = <span class="keyword">false</span>;</span><br><span class="line">                deferred.reject();</span><br><span class="line">            &#125;);</span><br><span class="line">        <span class="keyword">return</span> deferred.promise;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>signin</p>
+<p>首先用requst函数把<code>username:password</code>的base64编码加入http 请求头<code>Authorization</code>中，然后在认证成功后把server端返回的token发送给succesCallback。</p>
+</li>
+<li><p>authenticate</p>
+<p>与signin一样，首先调用request函数，不过把username替换成token，password置空，用token的方式来认证。与signin提供回调函数不一样，这里使用<code>$q</code>返回promise,可以让调用then方法进一步处理结果。</p>
+</li>
+</ol>
+<h2 id="Angular-Storage_存储token">Angular-Storage 存储token</h2><p>server返回的token用angular-storage保存，angular-storage使用浏览器的localStorage或者sessionStorage保存，如果浏览器不支持这些功能，就要ngCookies保存。</p>
+<pre><code><span class="keyword">function</span> onLoginSuccess(token) {
+    store.set(<span class="string">'token'</span>, token);
+    <span class="variable">$scope</span>.hitMsg = <span class="string">'login success'</span>;
+    <span class="variable">$location</span>.path(<span class="string">'/'</span>);
+}
+
+<span class="keyword">function</span> onLoginFailed() {
+   <span class="variable">$scope</span>.hitMsg = <span class="string">'username or password incorrect'</span>;
+}
+
+<span class="variable">$scope</span>.submit = <span class="keyword">function</span>() {
+    AuthService.signin({
+        username: <span class="variable">$scope</span>.user.username,
+        password: <span class="variable">$scope</span>.user.password
+    }, onLoginSuccess, onLoginFailed)
+};
+</code></pre><p>上面是LoginCtrl的一段代码，可以看到，当登录成功，用<code>store.set(&#39;token&#39;, token)</code>保存token。</p>
+<pre><code><span class="variable">$rootScope</span>.<span class="variable">$on</span>(<span class="string">'$routeChangeStart'</span>, <span class="keyword">function</span> (event, <span class="keyword">next</span>, current) {
+      if (!<span class="variable">$rootScope</span>.isLogin &amp;&amp; next.templateUrl) {
+          var token = store.get(<span class="string">'token'</span>);
+          if (token) {
+              AuthService.authenticate().then(function() {
+              }, function() {
+                  store.remove(<span class="string">'token'</span>);
+        <span class="variable">$location</span>.path(<span class="string">'/login'</span>);
+              });
+          } else if (next.loginRequired) {
+              <span class="variable">$location</span>.path(<span class="string">'/login'</span>);
+          }
+      }
+});
+</code></pre><p>上面的代码监听了全局的<code>$routeChangeStart</code>事件，如果用户没有登录，我们提取token进行认证，如果认证失败就删除本地的token(表明token过期了)，并提醒用户登录。<code>loginRequired</code>是我们自定义的一个属性，用来标识该route是否需要登录。见下面的route代码：</p>
+<pre><code><span class="variable">$routeProvider</span>
+.<span class="keyword">when</span>(<span class="string">'/'</span>, {
+    templateUrl: <span class="string">'static/partials/welcome.html'</span>,
+    controller: <span class="string">'WelcomeCtrl'</span>,
+    loginRequired: false
+})
+.<span class="keyword">when</span>(<span class="string">'/login'</span>, {
+    templateUrl: <span class="string">'static/partials/login.html'</span>,
+    controller: <span class="string">'LoginCtrl'</span>,
+    loginRequired: false
+})
+.<span class="keyword">when</span>(<span class="string">'/logout'</span>, {
+    templateUrl: <span class="string">'static/partials/welcome.html'</span>,
+    controller: <span class="string">'LogoutCtrl'</span>,
+    loginRequired: true
+})
+.otherwise({
+    rediretTo: <span class="string">'/'</span>
+});
+</code></pre><h2 id="拦截_401_错误">拦截 401 错误</h2><p>如果认证失败，server会返回<code>WWW-Authenticate: Basic realm=&quot;domain&quot;</code>，状态码为401的错误，此时我们需要拦截这个错误，并要求用户重新登录。</p>
+<pre><code>myApp.factory(<span class="string">'tokenInvalidInterceptor'</span>, [<span class="string">'$q'</span>, <span class="string">'$location'</span>, <span class="string">'$rootScope'</span>, <span class="string">'store'</span>,
+    <span class="keyword">function</span> (<span class="variable">$q</span>, <span class="variable">$location</span>, <span class="variable">$rootScope</span>, store) {
+    return {
+        <span class="string">'responseError'</span>: function (rejection) {
+            if (rejection.status == <span class="number">401</span>) {
+                if (store.get(<span class="string">'token'</span>))
+                    <span class="variable">$rootScope</span>.<span class="variable">$broadcast</span>(<span class="string">'unauth_token'</span>);
+                else
+                    <span class="variable">$rootScope</span>.<span class="variable">$broadcast</span>(<span class="string">'unauth'</span>);
+            }
+            return <span class="variable">$q</span>.reject(rejection);
+        }
+    }
+}]);
+
+// 在myApp.config中
+<span class="variable">$httpProvider</span>.interceptors.push(<span class="string">'tokenInvalidInterceptor'</span>);
+</code></pre><p>上面这段代码创建了一个Interceptror，如果在responseError中出现401错误码，广播事件给监听者，这里如果store中包含token就广播unauth_token事件，反之，广播unauth事件，下面的代码会根据这两个事件给用户提供相应的提示信息</p>
+<pre><code><span class="variable">$rootScope</span>.<span class="variable">$on</span>(<span class="string">'unauth_token'</span>, <span class="keyword">function</span> () {
+    store.remove(<span class="string">'token'</span>);
+    <span class="variable">$location</span>.path(<span class="string">'/login'</span>);
+    <span class="variable">$scope</span>.hitMsg = <span class="string">'token expire, please login'</span>;
+});
+
+<span class="variable">$rootScope</span>.<span class="variable">$on</span>(<span class="string">'unauth'</span>, <span class="keyword">function</span> () {
+    <span class="variable">$location</span>.path(<span class="string">'/login'</span>);
+    <span class="variable">$scope</span>.hitMsg = <span class="string">'please login'</span>;
+});
+</code></pre><p>此外，如果server端返回<code>WWW-Authenticate: Basic realm=&quot;domain&quot;</code>，浏览器会弹出一个对话框<br>提示用户登录，要避免这种情况，我们可以让服务端返回<code>WWW-Authenticate: xBasic realm=&quot;Authentication Required&quot;</code>, 如下</p>
+<pre><code>http_auth = <span class="function"><span class="title">HTTPBasicAuth</span><span class="params">()</span></span>
+
+@http_auth<span class="class">.error_handler</span>
+def <span class="function"><span class="title">unauthorized</span><span class="params">()</span></span>:
+    response = <span class="function"><span class="title">make_response</span><span class="params">()</span></span>
+    response<span class="class">.status_code</span> = <span class="number">401</span>
+    response<span class="class">.headers</span>[<span class="string">'WWW-Authenticate'</span>] = <span class="string">'xBasic realm="{0}"'</span>.<span class="function"><span class="title">format</span><span class="params">(<span class="string">'Authentication Required'</span>)</span></span>
+    return response
+</code></pre><h2 id="关于token的生成和认证">关于token的生成和认证</h2><ul>
+<li><p>生成token</p>
+<pre><code><span class="keyword">from</span> itsdangerous <span class="keyword">import</span> TimedJSONWebSignatureSerializer <span class="keyword">as</span> Serializer
+<span class="function"><span class="keyword">def</span> <span class="title">generate_auth_token</span><span class="params">(self)</span>:</span>
+  s = Serializer(current_app.config[<span class="string">'SECRET_KEY'</span>], expires_in=<span class="number">3600</span>)
+  <span class="keyword">return</span> s.dumps({<span class="string">'id'</span>: self.id})
+</code></pre></li>
+</ul>
+<p>把用户id序列化为一个默认一小时expire的字符串</p>
+<ul>
+<li><p>认证token</p>
+<pre><code>@http_auth<span class="class">.verify_password</span>
+def <span class="function"><span class="title">verify_password</span><span class="params">(username_or_token, password)</span></span>:
+    <span class="keyword">if</span> password == <span class="string">''</span>:
+        g<span class="class">.current_user</span> = User.<span class="function"><span class="title">verify_auth_token</span><span class="params">(username_or_token)</span></span>
+        g<span class="class">.token_used</span> = True
+        return g<span class="class">.current_user</span> != None
+    user = User<span class="class">.query</span><span class="class">.filter_by</span>(name=username_or_token).<span class="function"><span class="title">first</span><span class="params">()</span></span>
+    <span class="keyword">if</span> not user:
+        return False
+    g<span class="class">.current_user</span> = user
+    g<span class="class">.token_used</span> = False
+    return user.<span class="function"><span class="title">verify_password</span><span class="params">(password)</span></span>
+</code></pre></li>
+</ul>
+<p>这里是指HTTPAuth的密码验证函数，该函数接收两个参数，如果第二个参数，即 password 为空，则认为是以token认证，否则以username和password认证。</p>
+<h2 id="让程序跑一跑">让程序跑一跑</h2><p>要让程序成功跑起来，首先创建virtualenv，然后安装依赖</p>
+<pre><code>pip <span class="keyword">install</span> -r requirements.txt
+</code></pre><p>然后创建数据库</p>
+<pre><code>$ python manager<span class="class">.py</span> create_db
+</code></pre><p>然后创建用户名和密码</p>
+<pre><code>$ python manager<span class="class">.py</span> shell
+
+&gt;&gt;&gt; u = <span class="function"><span class="title">User</span><span class="params">(name=<span class="string">'admin'</span>)</span></span>
+&gt;&gt;&gt; db<span class="class">.session</span><span class="class">.add</span>(u)
+&gt;&gt;&gt; db<span class="class">.session</span><span class="class">.commit</span>()
+</code></pre><p>最后运行服务</p>
+<pre><code>$ python manager<span class="class">.py</span> runserver
+</code></pre><ul>
+<li><p>欢迎界面<br><img src="imgs/welcome.jpg" alt="welcome.jpg"></p>
+</li>
+<li><p>登录界面<br><img src="imgs/login.png" alt="login.png"></p>
+</li>
+<li><p>登录成功跳转到欢迎界面<br><img src="imgs/logged.png" alt="logged.png"></p>
+</li>
+</ul>
+<h2 id="附上程序源码">附上程序源码</h2><p><a href="https://github.com/khalily/flask-angular-http-auth" target="_blank" rel="external">https://github.com/khalily/flask-angular-http-auth</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近接触到angularjs这个前端框架，也学习到了用restful API的方式进行前后端的交互，在接下来的一段时间中边学习边总结这段时间的学习成果。</p>
+<p>要实现登录认证功能，常用的有以下这两种方法：</p>
+<ol>
+<li><a href="https://]]>
+    </summary>
+    
+      <category term="angularJs" scheme="http://khalily.github.io/tags/angularJs/"/>
+    
+      <category term="flask" scheme="http://khalily.github.io/tags/flask/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Sublime Text 2 配置分享]]></title>
@@ -110,7 +297,7 @@
     <link href="http://khalily.github.io/2015/05/03/pktgen/"/>
     <id>http://khalily.github.io/2015/05/03/pktgen/</id>
     <published>2015-05-03T02:04:49.000Z</published>
-    <updated>2015-08-17T03:46:16.062Z</updated>
+    <updated>2015-08-17T03:46:21.399Z</updated>
     <content type="html"><![CDATA[<p>pktgen是一个位于linux内核层的高性能网络测试工具。<br>主要用来测试网络驱动与网卡设备，支持多线程，能够产生随机mac地址、IP地址、UDP端口号的数据包。<br>pktgen的配置与统计信息查看都使用/proc文件系统完成，/proc文件系统是一种特殊的，有软件创建的文件系统，内核使用/proc文件系统向外界导出信息，外界也可以通过它配置内核态的一些进程的参数，如ps top uptime等linux发行版中的很多工具就是通过/proc实现的。在大多情况下，我们只用/proc读出数据（用于调试内核驱动等），而在pktgen中配置命令就用到了/proc的写入数据功能。</p>
 <h2 id="pktgen_相关文件">pktgen 相关文件</h2><ul>
 <li><p>/proc/net/pktgen/pgctrl<br>控制pktgen的启动和停止，默认输出当前版信息</p>

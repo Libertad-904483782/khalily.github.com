@@ -180,6 +180,241 @@
           
           
             
+              <a class="post-title-link" href="/2015/08/24/flask-angular-http-auth/" itemprop="url">
+                用 Flask 和 AngularJs 实现HTTP认证
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-08-24T10:19:40+08:00" content="2015-08-24">
+            2015-08-24
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/08/24/flask-angular-http-auth/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/24/flask-angular-http-auth/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody"><p>最近接触到angularjs这个前端框架，也学习到了用restful API的方式进行前后端的交互，在接下来的一段时间中边学习边总结这段时间的学习成果。</p>
+<p>要实现登录认证功能，常用的有以下这两种方法：</p>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Basic_access_authentication" title="Basic access authentication" target="_blank" rel="external">Basic access authentication</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Digest_access_authentication" title="Digest access authentication" target="_blank" rel="external">Digest access authentication</a></li>
+</ol>
+<p>这两种方法各有优劣，</p>
+<ul>
+<li>Basic access authentication 主要是胜在简单，只需要在Requset Header中加入 <code>Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</code>，其中字符串”Basic “后面的是”username:password”字符串的Base64编码，如果验证不成功，server会在Response Header中返回<code>WWW-Authenticate: Basic realm=&quot;domain&quot;</code>，状态码为401。但是这个方法不安全，在生产环境中须要在HTTPS下使用。但也因为他够简单，我们可以在开发测试环境中使用。</li>
+<li>Digest access authentication 顾名思义，主要是通过server端返回的随机码和摘要算法对username和password、realm以及需要发送的请求内容提取摘要，发送给server，该方法相比Basic access authentication来说稍稍复杂，但是却有较强的安全性。</li>
+</ul>
+<p>为简单和实用性，本文实现第一种方法，HTTP Basic Auth，主要用到以下插件：</p>
+<ol>
+<li><p>front-end</p>
+<p> AngularJs<br> AngularJs-storage<br> Bootstrap</p>
+</li>
+<li><p>back-end</p>
+<p> Flask==0.10.1<br> Flask-HTTPAuth==2.5.0<br> Flask-SQLAlchemy==2.0<br> Flask-Script==2.0.5<br> Jinja2==2.8<br> MarkupSafe==0.23<br> SQLAlchemy==1.0.8<br> Werkzeug==0.10.4<br> itsdangerous==0.24</p>
+</li>
+</ol>
+<h2 id="angularJs_的_AuthService">angularJs 的 AuthService</h2><p>AuthService 是我们自己定义的一个service，提供核心的认证功能，包括登录、登出、以及用token认证，关于token，需要强调的是，我们第一次登录的时候使用用户名和密码，server端返回一个token，以后进行认证的时候就使用token，以减少用户名和密码在网上传输的次数。token有使用时间限制，一般是几个小时之内。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">myApp.service(<span class="string">'AuthService'</span>, <span class="function"><span class="keyword">function</span><span class="params">(<span class="variable">$q</span>, <span class="variable">$http</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="keyword">self</span> = this;</span><br><span class="line">    <span class="keyword">self</span>.profile = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">self</span>.isAuthenticated = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">request</span><span class="params">(url, username_or_token, password)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            method: <span class="string">'GET'</span>,</span><br><span class="line">            url: url,</span><br><span class="line">            headers: &#123;</span><br><span class="line">                Accept: <span class="string">'application/json'</span>,</span><br><span class="line">                Authorization: <span class="string">'Basic '</span> + btoa(username_or_token + <span class="string">':'</span> + password)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>.signin = <span class="function"><span class="keyword">function</span> <span class="params">(options, successCallback, errorCallback)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> req = request(<span class="string">'/auth/login'</span>, options.username, options.password);</span><br><span class="line">        <span class="variable">$http</span>(req).</span><br><span class="line">        then(<span class="function"><span class="keyword">function</span><span class="params">(response)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">var</span> token = response.data.token;</span><br><span class="line">                <span class="keyword">if</span> (token) &#123;</span><br><span class="line">                    <span class="keyword">self</span>.isAuthenticated = <span class="keyword">true</span>;</span><br><span class="line">                    <span class="keyword">self</span>.profile = response.data.profile;</span><br><span class="line">                    successCallback(token);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;, <span class="function"><span class="keyword">function</span><span class="params">(error)</span> </span>&#123;</span><br><span class="line">                console.log(error.message);</span><br><span class="line">                errorCallback();</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>.signout = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">self</span>.isAuthenticated = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">self</span>.profile = <span class="keyword">null</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span>.authenticate = <span class="function"><span class="keyword">function</span> <span class="params">(token)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> req = request(<span class="string">'/auth/login_with_token'</span>, token, <span class="string">''</span>);</span><br><span class="line">        <span class="keyword">var</span> deferred = <span class="variable">$q</span>.defer();</span><br><span class="line">        <span class="variable">$http</span>(req)</span><br><span class="line">            .then(<span class="function"><span class="keyword">function</span> <span class="params">(response)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">self</span>.profile = response.data.profile;</span><br><span class="line">                <span class="keyword">self</span>.isAuthenticated = <span class="keyword">true</span>;</span><br><span class="line">                deferred.resolve();</span><br><span class="line">            &#125;, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">self</span>.isAuthenticated = <span class="keyword">false</span>;</span><br><span class="line">                deferred.reject();</span><br><span class="line">            &#125;);</span><br><span class="line">        <span class="keyword">return</span> deferred.promise;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>signin</p>
+<p>首先用requst函数把<code>username:password</code>的base64编码加入http 请求头<code>Authorization</code>中，然后在认证成功后把server端返回的token发送给succesCallback。</p>
+</li>
+<li><p>authenticate</p>
+<p>与signin一样，首先调用request函数，不过把username替换成token，password置空，用token的方式来认证。与signin提供回调函数不一样，这里使用<code>$q</code>返回promise,可以让调用then方法进一步处理结果。</p>
+</li>
+</ol>
+<h2 id="Angular-Storage_存储token">Angular-Storage 存储token</h2><p>server返回的token用angular-storage保存，angular-storage使用浏览器的localStorage或者sessionStorage保存，如果浏览器不支持这些功能，就要ngCookies保存。</p>
+<pre><code><span class="keyword">function</span> onLoginSuccess(token) {
+    store.set(<span class="string">'token'</span>, token);
+    <span class="variable">$scope</span>.hitMsg = <span class="string">'login success'</span>;
+    <span class="variable">$location</span>.path(<span class="string">'/'</span>);
+}
+
+<span class="keyword">function</span> onLoginFailed() {
+   <span class="variable">$scope</span>.hitMsg = <span class="string">'username or password incorrect'</span>;
+}
+
+<span class="variable">$scope</span>.submit = <span class="keyword">function</span>() {
+    AuthService.signin({
+        username: <span class="variable">$scope</span>.user.username,
+        password: <span class="variable">$scope</span>.user.password
+    }, onLoginSuccess, onLoginFailed)
+};
+</code></pre><p>上面是LoginCtrl的一段代码，可以看到，当登录成功，用<code>store.set(&#39;token&#39;, token)</code>保存token。</p>
+<pre><code><span class="variable">$rootScope</span>.<span class="variable">$on</span>(<span class="string">'$routeChangeStart'</span>, <span class="keyword">function</span> (event, <span class="keyword">next</span>, current) {
+      if (!<span class="variable">$rootScope</span>.isLogin &amp;&amp; next.templateUrl) {
+          var token = store.get(<span class="string">'token'</span>);
+          if (token) {
+              AuthService.authenticate().then(function() {
+              }, function() {
+                  store.remove(<span class="string">'token'</span>);
+        <span class="variable">$location</span>.path(<span class="string">'/login'</span>);
+              });
+          } else if (next.loginRequired) {
+              <span class="variable">$location</span>.path(<span class="string">'/login'</span>);
+          }
+      }
+});
+</code></pre><p>上面的代码监听了全局的<code>$routeChangeStart</code>事件，如果用户没有登录，我们提取token进行认证，如果认证失败就删除本地的token(表明token过期了)，并提醒用户登录。<code>loginRequired</code>是我们自定义的一个属性，用来标识该route是否需要登录。见下面的route代码：</p>
+<pre><code><span class="variable">$routeProvider</span>
+.<span class="keyword">when</span>(<span class="string">'/'</span>, {
+    templateUrl: <span class="string">'static/partials/welcome.html'</span>,
+    controller: <span class="string">'WelcomeCtrl'</span>,
+    loginRequired: false
+})
+.<span class="keyword">when</span>(<span class="string">'/login'</span>, {
+    templateUrl: <span class="string">'static/partials/login.html'</span>,
+    controller: <span class="string">'LoginCtrl'</span>,
+    loginRequired: false
+})
+.<span class="keyword">when</span>(<span class="string">'/logout'</span>, {
+    templateUrl: <span class="string">'static/partials/welcome.html'</span>,
+    controller: <span class="string">'LogoutCtrl'</span>,
+    loginRequired: true
+})
+.otherwise({
+    rediretTo: <span class="string">'/'</span>
+});
+</code></pre><h2 id="拦截_401_错误">拦截 401 错误</h2><p>如果认证失败，server会返回<code>WWW-Authenticate: Basic realm=&quot;domain&quot;</code>，状态码为401的错误，此时我们需要拦截这个错误，并要求用户重新登录。</p>
+<pre><code>myApp.factory(<span class="string">'tokenInvalidInterceptor'</span>, [<span class="string">'$q'</span>, <span class="string">'$location'</span>, <span class="string">'$rootScope'</span>, <span class="string">'store'</span>,
+    <span class="keyword">function</span> (<span class="variable">$q</span>, <span class="variable">$location</span>, <span class="variable">$rootScope</span>, store) {
+    return {
+        <span class="string">'responseError'</span>: function (rejection) {
+            if (rejection.status == <span class="number">401</span>) {
+                if (store.get(<span class="string">'token'</span>))
+                    <span class="variable">$rootScope</span>.<span class="variable">$broadcast</span>(<span class="string">'unauth_token'</span>);
+                else
+                    <span class="variable">$rootScope</span>.<span class="variable">$broadcast</span>(<span class="string">'unauth'</span>);
+            }
+            return <span class="variable">$q</span>.reject(rejection);
+        }
+    }
+}]);
+
+// 在myApp.config中
+<span class="variable">$httpProvider</span>.interceptors.push(<span class="string">'tokenInvalidInterceptor'</span>);
+</code></pre><p>上面这段代码创建了一个Interceptror，如果在responseError中出现401错误码，广播事件给监听者，这里如果store中包含token就广播unauth_token事件，反之，广播unauth事件，下面的代码会根据这两个事件给用户提供相应的提示信息</p>
+<pre><code><span class="variable">$rootScope</span>.<span class="variable">$on</span>(<span class="string">'unauth_token'</span>, <span class="keyword">function</span> () {
+    store.remove(<span class="string">'token'</span>);
+    <span class="variable">$location</span>.path(<span class="string">'/login'</span>);
+    <span class="variable">$scope</span>.hitMsg = <span class="string">'token expire, please login'</span>;
+});
+
+<span class="variable">$rootScope</span>.<span class="variable">$on</span>(<span class="string">'unauth'</span>, <span class="keyword">function</span> () {
+    <span class="variable">$location</span>.path(<span class="string">'/login'</span>);
+    <span class="variable">$scope</span>.hitMsg = <span class="string">'please login'</span>;
+});
+</code></pre><p>此外，如果server端返回<code>WWW-Authenticate: Basic realm=&quot;domain&quot;</code>，浏览器会弹出一个对话框<br>提示用户登录，要避免这种情况，我们可以让服务端返回<code>WWW-Authenticate: xBasic realm=&quot;Authentication Required&quot;</code>, 如下</p>
+<pre><code>http_auth = <span class="function"><span class="title">HTTPBasicAuth</span><span class="params">()</span></span>
+
+@http_auth<span class="class">.error_handler</span>
+def <span class="function"><span class="title">unauthorized</span><span class="params">()</span></span>:
+    response = <span class="function"><span class="title">make_response</span><span class="params">()</span></span>
+    response<span class="class">.status_code</span> = <span class="number">401</span>
+    response<span class="class">.headers</span>[<span class="string">'WWW-Authenticate'</span>] = <span class="string">'xBasic realm="{0}"'</span>.<span class="function"><span class="title">format</span><span class="params">(<span class="string">'Authentication Required'</span>)</span></span>
+    return response
+</code></pre><h2 id="关于token的生成和认证">关于token的生成和认证</h2><ul>
+<li><p>生成token</p>
+<pre><code><span class="keyword">from</span> itsdangerous <span class="keyword">import</span> TimedJSONWebSignatureSerializer <span class="keyword">as</span> Serializer
+<span class="function"><span class="keyword">def</span> <span class="title">generate_auth_token</span><span class="params">(self)</span>:</span>
+  s = Serializer(current_app.config[<span class="string">'SECRET_KEY'</span>], expires_in=<span class="number">3600</span>)
+  <span class="keyword">return</span> s.dumps({<span class="string">'id'</span>: self.id})
+</code></pre></li>
+</ul>
+<p>把用户id序列化为一个默认一小时expire的字符串</p>
+<ul>
+<li><p>认证token</p>
+<pre><code>@http_auth<span class="class">.verify_password</span>
+def <span class="function"><span class="title">verify_password</span><span class="params">(username_or_token, password)</span></span>:
+    <span class="keyword">if</span> password == <span class="string">''</span>:
+        g<span class="class">.current_user</span> = User.<span class="function"><span class="title">verify_auth_token</span><span class="params">(username_or_token)</span></span>
+        g<span class="class">.token_used</span> = True
+        return g<span class="class">.current_user</span> != None
+    user = User<span class="class">.query</span><span class="class">.filter_by</span>(name=username_or_token).<span class="function"><span class="title">first</span><span class="params">()</span></span>
+    <span class="keyword">if</span> not user:
+        return False
+    g<span class="class">.current_user</span> = user
+    g<span class="class">.token_used</span> = False
+    return user.<span class="function"><span class="title">verify_password</span><span class="params">(password)</span></span>
+</code></pre></li>
+</ul>
+<p>这里是指HTTPAuth的密码验证函数，该函数接收两个参数，如果第二个参数，即 password 为空，则认为是以token认证，否则以username和password认证。</p>
+<h2 id="让程序跑一跑">让程序跑一跑</h2><p>要让程序成功跑起来，首先创建virtualenv，然后安装依赖</p>
+<pre><code>pip <span class="keyword">install</span> -r requirements.txt
+</code></pre><p>然后创建数据库</p>
+<pre><code>$ python manager<span class="class">.py</span> create_db
+</code></pre><p>然后创建用户名和密码</p>
+<pre><code>$ python manager<span class="class">.py</span> shell
+
+&gt;&gt;&gt; u = <span class="function"><span class="title">User</span><span class="params">(name=<span class="string">'admin'</span>)</span></span>
+&gt;&gt;&gt; db<span class="class">.session</span><span class="class">.add</span>(u)
+&gt;&gt;&gt; db<span class="class">.session</span><span class="class">.commit</span>()
+</code></pre><p>最后运行服务</p>
+<pre><code>$ python manager<span class="class">.py</span> runserver
+</code></pre><ul>
+<li><p>欢迎界面<br><img src="imgs/welcome.jpg" alt="welcome.jpg"></p>
+</li>
+<li><p>登录界面<br><img src="imgs/login.png" alt="login.png"></p>
+</li>
+<li><p>登录成功跳转到欢迎界面<br><img src="imgs/logged.png" alt="logged.png"></p>
+</li>
+</ul>
+<h2 id="附上程序源码">附上程序源码</h2><p><a href="https://github.com/khalily/flask-angular-http-auth" target="_blank" rel="external">https://github.com/khalily/flask-angular-http-auth</a></p>
+</span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/30/sublime-config/" itemprop="url">
                 Sublime Text 2 配置分享
               </a>
@@ -828,283 +1063,6 @@ Suffix Expression:     <span class="number">1</span> <span class="number">23</sp
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2013/06/04/zhihu-test/" itemprop="url">
-                知乎笔试
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2013-06-04T08:00:00+08:00" content="2013-06-04">
-            2013-06-04
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a></span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2013/06/04/zhihu-test/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2013/06/04/zhihu-test/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody"><h1 id="知乎笔试题">知乎笔试题</h1><h2 id="过滤html标签">过滤html标签</h2><p>假设在一个文本编辑器中允许使用富文本，但只允许使用以下html标签和属性，</p>
-<pre><code><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">""</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">abbr</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">acronym</span> <span class="attribute">title</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">b</span>&gt;</span>
-<span class="tag">&lt;<span class="title">blockquote</span> <span class="attribute">cite</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">cite</span>&gt;</span> <span class="tag">&lt;<span class="title">code</span>&gt;</span> <span class="tag">&lt;<span class="title">del</span> <span class="attribute">datetime</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">em</span>&gt;</span> <span class="tag">&lt;<span class="title">i</span>&gt;</span> <span class="tag">&lt;<span class="title">q</span>
-<span class="attribute">cite</span>=<span class="value">""</span>&gt;</span> <span class="tag">&lt;<span class="title">strike</span>&gt;</span> <span class="tag">&lt;<span class="title">strong</span>&gt;</span>  <span class="tag">&lt;<span class="title">pre</span>&gt;</span>
-</code></pre><p>编写一个过滤器，对任意输入的文本进行过滤，输出符合要求的富文本</p>
-<p>代码如下：</p>
-<pre><code><span class="comment">#!/usr/bin/python env</span>
-<span class="comment">#coding: utf8</span>
-
-<span class="keyword">from</span> BeautifulSoup <span class="keyword">import</span> BeautifulSoup
-
-html = <span class="string">'&lt;html&gt;&lt;head&gt;&lt;title&gt;Page title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;\
-&lt;p id="firstpara" align="center"&gt;This is paragraph &lt;b&gt;one&lt;/b&gt;.\
-&lt;script type="text/javascript"&gt;"only test";&lt;/script&gt;\
-&lt;a href="" title="" onclick=""&gt;test&lt;/a&gt;\
-&lt;p id="secondpara" align="blah"&gt;This is paragraph &lt;b&gt;two&lt;/b&gt;.&lt;/html&gt;'</span>
-
-<span class="comment"># &lt;a href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; &lt;b&gt;</span>
-<span class="comment"># &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=""&gt; &lt;em&gt; &lt;i&gt; &lt;q</span>
-<span class="comment"># cite=""&gt; &lt;strike&gt; &lt;strong&gt;  &lt;pre&gt;</span>
-
-WHITE_LIST = {<span class="string">'a'</span>: {<span class="string">'href'</span>: <span class="string">'*'</span>, <span class="string">'title'</span>: <span class="string">'*'</span>}, <span class="string">'abbr'</span>: {<span class="string">'title'</span>: <span class="string">'*'</span>},
-              <span class="string">'acronym'</span>: {<span class="string">'title'</span>: <span class="string">'*'</span>}, <span class="string">'b'</span>: {}, <span class="string">'blockquote'</span>: {<span class="string">'cite'</span>: <span class="string">'*'</span>},
-              <span class="string">'cite'</span>: {}, <span class="string">'code'</span>: {}, <span class="string">'i'</span>: {}, <span class="string">'del'</span>: {<span class="string">'datetime'</span>: <span class="string">'*'</span>},
-              <span class="string">'em'</span>: {}, <span class="string">'q'</span>: {<span class="string">'cite'</span>: <span class="string">'*'</span>}, <span class="string">'strike'</span>: {}, <span class="string">'strong'</span>: {},
-              <span class="string">'pre'</span>: {}}
-
-
-<span class="function"><span class="keyword">def</span> <span class="title">parseHtml</span><span class="params">(html)</span>:</span>
-    soup = BeautifulSoup(html)
-    <span class="keyword">for</span> tag <span class="keyword">in</span> soup.findAll(<span class="keyword">True</span>):
-        <span class="keyword">if</span> tag.name <span class="keyword">not</span> <span class="keyword">in</span> WHITE_LIST:
-            tag.hidden = <span class="keyword">True</span>
-        <span class="keyword">else</span>:
-            attr_rules = WHITE_LIST[tag.name]
-            <span class="keyword">for</span> attr_name, attr_value <span class="keyword">in</span> tag.attrs:
-                <span class="keyword">if</span> attr_name <span class="keyword">not</span> <span class="keyword">in</span> attr_rules:
-                    <span class="keyword">del</span> tag[attr_name]
-
-    <span class="keyword">return</span> soup.renderContents()
-
-
-<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
-    <span class="keyword">print</span> parseHtml(html)
-</code></pre><h2 id="假设给你一个月的日志，格式如下：">假设给你一个月的日志，格式如下：</h2><pre><code>[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">40</span>] <span class="number">1</span> <span class="number">200</span> GET /question/<span class="number">123</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">200.39</span>ms
-[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">90</span>] <span class="number">1</span> <span class="number">200</span> GET /topic/<span class="number">456</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">300.85</span>ms
-[I <span class="number">130403</span> <span class="number">17</span>:<span class="number">26</span>:<span class="number">90</span>] <span class="number">1</span> <span class="number">200</span> POST /answer/<span class="number">789</span> (<span class="number">8.8</span><span class="number">.9</span><span class="number">.9</span>) <span class="number">300.85</span>ms
-...
-</code></pre><p>方括号中依次是：级别，日期，时间，后面依次是用户id，返回码，访问方式，访问路径，用户ip，响应时间</p>
-<p>日志文件名格式为：年-月-日-小时.log，如：2013-01-01-18.log，共30*24个文件。</p>
-<p>写个程序，算出一个用户列表同时符合以下两个要求：</p>
-<ol>
-<li>这些用户每天都会访问（GET）/topic/<em>**这个路径至少两次（</em>代表数字）</li>
-<li>这些用户每天访问（GET）的/topic/<em>*</em>路径中，至少会包含两个不同的路径（后面的数字不一样）</li>
-</ol>
-<p>再算出一个路径列表满足:<br>每天都被以上用户中至少两个用户访问</p>
-<h2 id="实现思路：">实现思路：</h2><ul>
-<li>先把一个月的30*24个文件名分天存储在一个filepaths_one_month列表 [[filepaths_one_day], …]</li>
-<li>然后算出每一天符合要求的用户访问的路径列表 user_dict_day {user_id: [path, …]} 和 符合要求的被访问路径的用户列表<br>path_dict_day {path: [user_id, …]}</li>
-<li><p>然后把每天的user_dict_day的keys 求交集，求出每天都访问的用户，再用其为key, 找到这些用户访问的路径列表交集不为空的user_id, 即为要求1的答案user_list，接下来则对path_dict_day进行相同的操作，得出每天都被至少两个用户访问的路径列表，最后再用访问这些路径的用户列表与要求1求出的用户列表求交集，得出使交集不为空的path_list.</p>
-</li>
-<li><p>需要说明一点，日志文件的年、月、日都在test()函数设置，然后在当前文件夹寻找日志文件，日志的小时范围为00点-23点(而不是01点-24点)。为了一些可读性，包含了一些较冗余的代码，不过代码不多，相信影响不大。</p>
-</li>
-</ul>
-<p>代码如下：</p>
-<pre><code>#!/usr/bin/env python
-#coding: utf8
-
-import re
-
-log_keys = [
-    'user_id',
-    'return_code',
-    'access_way',
-    'access_path',
-    'ip_address',
-    'time'
-]
-
-
-class Find(object):
-    def __init__(self, days, month, year):
-        self.filepaths_one_month = self.file_paths(days, month, year)
-        # for filepaths_day in self.filepaths_one_month:
-        #     for filepath in filepaths_day:
-        #         print filepath
-        self.user_dict_month = {}       # {user_id: {path, ...}}
-        self.path_dict_month = {}       # {path: {user_id, ...}}
-
-    def find_one_month(self):
-        user_dict_pre_day, path_dict_pre_day = self.find_one_day(self.filepaths_one_month[<span class="operator">0])
-        <span class="keyword">for</span> filepaths_one_day <span class="keyword">in</span> <span class="keyword">self</span>.filepaths_one_month[<span class="number">1</span>:]:
-            user_dict_day, path_dict_day = <span class="keyword">self</span>.find_one_day(filepaths_one_day)
-            user_set = <span class="keyword">set</span>(user_dict_day.<span class="keyword">keys</span>()) &amp; <span class="keyword">set</span>(user_dict_pre_day.<span class="keyword">keys</span>())
-            <span class="keyword">for</span> user_id <span class="keyword">in</span> user_set:
-                path_set = <span class="keyword">set</span>(user_dict_day[user_id]) &amp; <span class="keyword">set</span>(user_dict_pre_day[user_id])
-                <span class="keyword">if</span> <span class="keyword">len</span>(path_set) &gt; <span class="number">0</span>:
-                    <span class="keyword">self</span>.user_dict_month[user_id] = path_set
-            user_dict_pre_day = <span class="keyword">self</span>.user_dict_month
-
-            path_set = <span class="keyword">set</span>(path_dict_day.<span class="keyword">keys</span>()) &amp; <span class="keyword">set</span>(path_dict_pre_day.<span class="keyword">keys</span>())
-            <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> path_set:
-                user_set = <span class="keyword">set</span>(path_dict_day[<span class="keyword">path</span>]) &amp; <span class="keyword">set</span>(path_dict_pre_day[<span class="keyword">path</span>])
-                <span class="keyword">self</span>.path_dict_month[<span class="keyword">path</span>] = user_set
-            path_dict_pre_day = <span class="keyword">self</span>.path_dict_month
-
-        user_list = <span class="keyword">self</span>.user_dict_month.<span class="keyword">keys</span>()
-        path_list = []
-
-        <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> <span class="keyword">self</span>.path_dict_month.<span class="keyword">keys</span>():
-            <span class="keyword">if</span> <span class="keyword">len</span>(<span class="keyword">self</span>.path_dict_month[<span class="keyword">path</span>] &amp; <span class="keyword">set</span>(user_list)) &gt; <span class="number">0</span>:
-                path_list.append(<span class="keyword">path</span>)
-
-        <span class="keyword">return</span> user_list, path_list
-
-    <span class="keyword">def</span> file_paths(<span class="keyword">self</span>, <span class="keyword">days</span>, <span class="keyword">month</span>, <span class="keyword">year</span>):
-        filepaths = []
-        <span class="keyword">for</span> <span class="keyword">day</span> <span class="keyword">in</span> xrange(<span class="number">1</span>, <span class="keyword">days</span>+<span class="number">1</span>):
-            filepaths_day = []
-            <span class="keyword">for</span> <span class="keyword">hour</span> <span class="keyword">in</span> xrange(<span class="number">0</span>, <span class="number">24</span>):
-                temppath = <span class="string">"%2d-%2d-%2d-%2d.log"</span> % (<span class="keyword">year</span>, <span class="keyword">month</span>, <span class="keyword">day</span>, <span class="keyword">hour</span>)
-                filepaths_day.append(temppath.<span class="keyword">replace</span>(<span class="string">' '</span>, <span class="string">'0'</span>))
-            filepaths.append(filepaths_day)
-        <span class="keyword">return</span> filepaths
-
-    <span class="keyword">def</span> find_one_day(<span class="keyword">self</span>, filepaths):
-        user_dict = {}          # {user_id: {<span class="keyword">path</span>: times}}
-        user_dict_day = {}      # {user_id: [<span class="keyword">path</span>, ...]}
-        path_dict = {}          # {<span class="keyword">path</span>: {user_id: times}}
-        path_dict_day = {}      # {<span class="keyword">path</span>: [user_id, ...]}
-
-        <span class="keyword">for</span> filepath <span class="keyword">in</span> filepaths:
-            <span class="keyword">for</span> line <span class="keyword">in</span> <span class="keyword">file</span>(filepath).readlines():
-                <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">self</span>.is_get_and_topic(line):
-                    continue
-                log_dict = <span class="keyword">self</span>.parser_line(line)
-
-                user_id = log_dict[<span class="string">'user_id'</span>]
-                <span class="keyword">path</span> = log_dict[<span class="string">'access_path'</span>]
-                <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> user_dict:
-                    user_dict[user_id] = {}
-                <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> user_dict[user_id]:
-                    user_dict[user_id][<span class="keyword">path</span>] = <span class="number">1</span>
-                <span class="keyword">else</span>:
-                    user_dict[user_id][<span class="keyword">path</span>] = user_dict[user_id][<span class="keyword">path</span>] + <span class="number">1</span>
-
-                <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> path_dict:
-                    path_dict[<span class="keyword">path</span>] = {}
-                <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> path_dict[<span class="keyword">path</span>]:
-                    path_dict[<span class="keyword">path</span>][user_id] = <span class="number">1</span>
-                <span class="keyword">else</span>:
-                    path_dict[<span class="keyword">path</span>][user_id] = path_dict[<span class="keyword">path</span>][user_id] + <span class="number">1</span>
-
-        <span class="keyword">for</span> user_id <span class="keyword">in</span> user_dict.<span class="keyword">keys</span>():
-            <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> user_dict[user_id].<span class="keyword">keys</span>():
-                <span class="keyword">if</span> user_dict[user_id][<span class="keyword">path</span>] &gt;= <span class="number">2</span> <span class="keyword">and</span> <span class="keyword">len</span>(user_dict[user_id].<span class="keyword">keys</span>()) &gt;= <span class="number">2</span>:
-                    <span class="keyword">if</span> user_id <span class="keyword">not</span> <span class="keyword">in</span> user_dict_day:
-                        user_dict_day[user_id] = []
-                    user_dict_day[user_id].append(<span class="keyword">path</span>)
-        # print <span class="string">'user_dict_day:'</span>, user_dict_day
-
-        <span class="keyword">for</span> <span class="keyword">path</span> <span class="keyword">in</span> path_dict.<span class="keyword">keys</span>():
-            <span class="keyword">for</span> user_id <span class="keyword">in</span> path_dict[<span class="keyword">path</span>].<span class="keyword">keys</span>():
-                <span class="keyword">if</span> path_dict[<span class="keyword">path</span>][user_id] &gt;= <span class="number">2</span>:
-                    <span class="keyword">if</span> <span class="keyword">path</span> <span class="keyword">not</span> <span class="keyword">in</span> path_dict_day:
-                        path_dict_day[<span class="keyword">path</span>] = []
-                    path_dict_day[<span class="keyword">path</span>].append(user_id)
-        # print <span class="string">'path_dict_day:'</span>, path_dict_day
-
-        <span class="keyword">return</span> user_dict_day, path_dict_day
-
-    <span class="keyword">def</span> parser_line(<span class="keyword">self</span>, <span class="keyword">str</span>):
-        log_list = <span class="keyword">str</span>[(<span class="keyword">str</span>.find(<span class="string">']'</span>)+<span class="number">2</span>):].<span class="keyword">split</span>(<span class="string">' '</span>)
-        log_dict = {}
-        <span class="keyword">for</span> <span class="keyword">index</span> <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">0</span>, <span class="keyword">len</span>(log_list)):
-            log_dict[log_keys[<span class="keyword">index</span>]] = log_list[<span class="keyword">index</span>]
-        # <span class="keyword">for</span> <span class="keyword">key</span>, <span class="keyword">value</span> <span class="keyword">in</span> log_dict.items():
-        #     print <span class="keyword">key</span>, <span class="keyword">value</span>
-        <span class="keyword">return</span> log_dict
-
-    <span class="keyword">def</span> is_get_and_topic(<span class="keyword">self</span>, <span class="keyword">str</span>):
-        <span class="keyword">if</span> re.<span class="keyword">search</span>(<span class="string">'GET /topic/[0-9]+'</span>, <span class="keyword">str</span>):
-            <span class="keyword">return</span> <span class="literal">True</span>
-        <span class="keyword">return</span> <span class="literal">False</span>
-
-
-<span class="keyword">def</span> <span class="keyword">test</span>():
-    <span class="keyword">days</span> = <span class="number">30</span>        # 一个月的天数
-    <span class="keyword">year</span> = <span class="number">2013</span>
-    <span class="keyword">month</span> = <span class="number">1</span>
-    <span class="keyword">test</span> = Find(<span class="keyword">days</span>, <span class="keyword">month</span>, <span class="keyword">year</span>)
-    user_list, path_list = <span class="keyword">test</span>.find_one_month()
-
-    print <span class="string">'user_list:'</span>, user_list
-    print <span class="string">'path_list:'</span>, path_list
-
-<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
-    <span class="keyword">test</span>()</span>
-</code></pre></span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1144,7 +1102,7 @@ class Find(object):
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1158,7 +1116,7 @@ class Find(object):
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
