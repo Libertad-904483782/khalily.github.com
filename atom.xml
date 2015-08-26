@@ -528,13 +528,13 @@ regex_map http://(.*):<span class="number">8080</span> http://<span class="varia
     <link href="http://khalily.github.io/2013/06/06/binary-expression-tree/"/>
     <id>http://khalily.github.io/2013/06/06/binary-expression-tree/</id>
     <published>2013-06-06T00:00:00.000Z</published>
-    <updated>2015-08-26T01:55:09.983Z</updated>
+    <updated>2015-08-26T02:00:18.697Z</updated>
     <content type="html"><![CDATA[<h2 id="运行效果">运行效果</h2><pre><code>$ ./expression-tree
 
 Input Expression:     [<span class="number">1</span> + <span class="number">23</span> * <span class="number">1</span> - <span class="number">12</span> * ( <span class="number">4</span> + <span class="number">2</span> * <span class="number">5</span> )]
 Caculate Result:     -<span class="number">144</span>
 Prefix Expression:     - + <span class="number">1</span> * <span class="number">23</span> <span class="number">1</span> * <span class="number">12</span> + <span class="number">4</span> * <span class="number">2</span> <span class="number">5</span>
-Nifix Expression:     <span class="number">1</span> + <span class="number">23</span> * <span class="number">1</span> - <span class="number">12</span> * <span class="number">4</span> + <span class="number">2</span> * <span class="number">5</span>
+Infix Expression:     <span class="number">1</span> + <span class="number">23</span> * <span class="number">1</span> - <span class="number">12</span> * <span class="number">4</span> + <span class="number">2</span> * <span class="number">5</span>
 Suffix Expression:     <span class="number">1</span> <span class="number">23</span> <span class="number">1</span> * + <span class="number">12</span> <span class="number">4</span> <span class="number">2</span> <span class="number">5</span> * + * -
 </code></pre><h2 id="一个简单的结构图">一个简单的结构图</h2><p><img src="imgs/expression-tree.png" alt="expression-tree"></p>
 <h2 id="关于面向对象">关于面向对象</h2><ol>
